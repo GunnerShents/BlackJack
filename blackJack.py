@@ -84,10 +84,7 @@ class TheGame():
         
         self.need_back = False
         #returns true if dealer has 17 - 21
-        if self.main_player.check_blackjack():
-            self.main_player.calc_win()
-            print ("yeah you have black jack")
-        elif self.the_dealer.check_for_stand() or self.main_player.check_bust():
+        if self.the_dealer.check_for_stand() or self.main_player.check_bust():
             self.check_result()
             print("Second if")
         else:
@@ -100,7 +97,6 @@ class TheGame():
         self.hit_btn.set_active(False)
     
 
-    
     #checks player score to the dealers score
     #calculates the bet return.
     def check_result(self):

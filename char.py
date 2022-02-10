@@ -148,6 +148,7 @@ class Dealer(Character):
     def reset(self):
         self.hand = []
         self.total = 0
+        self.bust = False
 
     def check_for_stand(self):
         total = self.get_total()
