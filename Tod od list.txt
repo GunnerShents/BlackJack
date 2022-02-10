@@ -14,8 +14,9 @@ Extended project:
     3. Test the game with @crypto.
 
 Problem found:
-    List ondex out of range, check why this is?
-    random seed 1565557150
+    List ondex out of range, line 162. Check values in the list.
+    The stand function in the game is now not working correctly.
+    
 
     if you play several hands then IndexError: List index out of range
     random seed 399408870
