@@ -3,10 +3,8 @@ Jobs to do:
     
 
 Working on:
-    1. Grey scale button when inactive.
-    2. Sort out black jack 2.5 times bet return.
-    3. Work on allowing more bets.
-    4. Look into creating more betting chip images.
+    1. Work on betting logic.
+    2. Look into creating more betting chip images.
 
 Extended project:
     1. Look at adding a split button and logic.
@@ -14,9 +12,5 @@ Extended project:
     3. Test the game with @crypto.
 
 Problem found:
-    List ondex out of range, line 162. Check values in the list.
-    The stand function in the game is now not working correctly.
     
-
-    if you play several hands then IndexError: List index out of range
-    random seed 399408870
+    NFTR
