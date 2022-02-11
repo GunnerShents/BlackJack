@@ -115,7 +115,7 @@ class TheGame():
        
 
     def create_buttons(self):
-        btn_dict = generate_button_images()
+        btn_dict = generate_images()
         BTN_START_X = 100
         BTN_START_Y = 600
         

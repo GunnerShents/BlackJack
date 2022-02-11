@@ -1,34 +1,21 @@
 import pygame
 import config
-from os import path
-
-
+from os import path, listdir 
 
 #----------------------------------------------------------------
-
-def generate_button_images():
-    # load images
-    btn_dict = {
-        "bet_up":pygame.image.load(path.join(config.IMG_DIR,"bet_btn_up.png")).convert_alpha(), 
-        "bet_down":pygame.image.load(path.join(config.IMG_DIR,"bet_btn_down.png")).convert_alpha(),
-        "deal_up":pygame.image.load(path.join(config.IMG_DIR,"deal_btn_up.png")).convert_alpha(),
-        "deal_down":pygame.image.load(path.join(config.IMG_DIR,"deal_btn_down.png")).convert_alpha(),
-        "hit_up":pygame.image.load(path.join(config.IMG_DIR,"hit_btn_up.png")).convert_alpha(),
-        "hit_down":pygame.image.load(path.join(config.IMG_DIR,"hit_btn_down.png")).convert_alpha(),
-        "stand_up":pygame.image.load(path.join(config.IMG_DIR,"stand_btn_up.png")).convert_alpha(),
-        "stand_down":pygame.image.load(path.join(config.IMG_DIR,"stand_btn_down.png")).convert_alpha(),
-        "stand_down":pygame.image.load(path.join(config.IMG_DIR,"stand_btn_down.png")).convert_alpha(),
-        "hit_grey":pygame.image.load(path.join(config.IMG_DIR,"hit_grey1.png")).convert_alpha(),
-        "deal_grey":pygame.image.load(path.join(config.IMG_DIR,"deal_grey1.png")).convert_alpha(),
-        "stand_grey":pygame.image.load(path.join(config.IMG_DIR,"stand_grey1.png")).convert_alpha(),
-        "bet_grey":pygame.image.load(path.join(config.IMG_DIR,"bet_grey1.png")).convert_alpha(),
-   
-   }
+def generate_images():
+    btn_dict = {}
+    for file in listdir(config.IMG_DIR):
+        f = path.join(config.IMG_DIR, file)
+        if path.isfile(f):
+            btn_dict[file[:-4]] = pygame.image.load(f).convert_alpha()
+        
     #loop scales each image value
     for btn in btn_dict.keys():
         btn_dict[btn] = pygame.transform.scale(btn_dict[btn],(config.BUTTON_WIDTH, config.BUTTON_HEIGHT))
 
-    return btn_dict
+    return btn_dict           
+
 
 class Buttons():
 
