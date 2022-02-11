@@ -84,9 +84,10 @@ class TheGame():
         
         self.need_back = False
         #returns true if dealer has 17 - 21
-        if self.the_dealer.check_for_stand() or self.main_player.check_bust():
+        if self.main_player.check_blackjack():
+           self.check_result() 
+        elif self.the_dealer.check_for_stand() or self.main_player.check_bust():
             self.check_result()
-            print("Second if")
         else:
             while not self.the_dealer.bust and not self.the_dealer.check_for_stand():
                 self.hit(self.the_dealer)

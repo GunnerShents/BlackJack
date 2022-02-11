@@ -1,5 +1,6 @@
-import random
+value = 15/2
+value1 = 15//2
 
-random.seed(1)
+value / 2
 
-print(random.random())
+print (value, value1)

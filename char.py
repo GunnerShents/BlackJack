@@ -106,7 +106,7 @@ class Player(Character):
     
     def black_jack(self):
 
-        self.balance += self.bet + self.bet + self.bet/2
+        self.balance += self.bet * 2 + self.bet//2
 
     def lost(self):
 
