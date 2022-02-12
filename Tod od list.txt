@@ -3,8 +3,11 @@ Jobs to do:
     
 
 Working on:
-    1. Work on betting logic.
-    2. Look into creating more betting chip images.
+    1. Started betting logic in the betting class. Need to review script.
+    2. Rename betting chips and check they load into the btn_dict.
+    3. Create betting buttons on the table for the user to bet with.
+    4. create chip stack and logic.
+    5. Create a chip total displayed under the chip stack. 
 
 Extended project:
     1. Look at adding a split button and logic.
