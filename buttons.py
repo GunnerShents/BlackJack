@@ -12,8 +12,10 @@ def generate_images():
         
     #loop scales each image value
     for btn in btn_dict.keys():
-        btn_dict[btn] = pygame.transform.scale(btn_dict[btn],(config.BUTTON_WIDTH, config.BUTTON_HEIGHT))
-
+        if btn[:5] == "chip_":
+            btn_dict[btn] = pygame.transform.scale(btn_dict[btn],((config.BUTTON_WIDTH/5)*3, (config.BUTTON_HEIGHT/5)*3))
+        else:
+           btn_dict[btn] = pygame.transform.scale(btn_dict[btn],(config.BUTTON_WIDTH, config.BUTTON_HEIGHT))
     return btn_dict           
 
 
@@ -24,9 +26,9 @@ class Buttons():
         self.on_click = on_click
         self.image = [button_up_img, button_down_img, grey_image]
         self.index = 0
-        self.rect = self.image[self.index].get_rect()
-        self.rect.x = x
-        self.rect.y = y
+        self.rect = self.image[self.index].get_rect(x=x, y=y)
+        # self.rect.x = x
+        # self.rect.y = y
         self.active = active
         self.image_change = False
         self.grey_img = grey_image
@@ -55,13 +57,43 @@ class Buttons():
             if self.get_active():
                 self.set_index(1)
                 return True
-           
-            
+    
     def reset_image(self):
         if self.get_active():
             self.set_index(0)
         else:
             self.set_index(2)
+            
+
+class Chip_button():
+    
+    def __init__ (self, on_click, button_up_img, button_down_img, x ,y, value):
+        
+        self.on_click = on_click
+        self.image = [button_up_img, button_down_img]
+        self.index = 0
+        self.rect = self.image[self.index].get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        self.value = value
+    
+    def click(self):
+        self.on_click()
+    
+    def draw_button (self, area):
+        
+        area.blit(self.image[self.index], (self.rect))
+        
+    #x, y are the mouse x, y co_ords
+    def check_collide (self, x, y):
+        if self.rect.collidepoint(x, y):
+            self.index = 1
+            return True
+    
+    def reset_image(self):
+        self.index = 0
+            
+
 
 
 

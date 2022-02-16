@@ -15,5 +15,6 @@ Extended project:
     3. Test the game with @crypto.
 
 Problem found:
+    1. self.rect issues with rendering the image. Old image still showing 
     
-    NFTR
+    

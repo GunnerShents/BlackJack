@@ -13,7 +13,6 @@ class TheGame():
 
     def __init__(self, screen, main_player: Player):
         self.screen = screen
-
         #------------------------------------------------------------------------------------	
         #Load pictures
         table_img = pygame.image.load(path.join(config.IMG_DIR,"black_jack_table.png")).convert_alpha()
@@ -29,10 +28,12 @@ class TheGame():
         self.the_dealer = Dealer()
         #images and button attributes
         self.btn_imgs = []
+        self.chip_btn_images = []
         coin_img = pygame.image.load(os.path.join(config.IMG_DIR,"coin.png")).convert_alpha()
         self.coin_img = pygame.transform.scale(coin_img,(config.COIN_X, config.COIN_Y))
         self.card_images = CardImages()
-        self.create_buttons()
+        self.create_game_buttons()
+        self.create_chip_btns()
         self.need_back = False
         self.frame = 0
 
@@ -114,18 +115,17 @@ class TheGame():
         self.deal_btn.set_active(True)
        
 
-    def create_buttons(self):
+    def create_game_buttons(self):
         btn_dict = generate_images()
         BTN_START_X = 100
-        BTN_START_Y = 600
+        BTN_START_Y = 630
         
         def hit_main_player():
             self.hit(self.main_player)
-        
+            
         def player_place_bet():
-            self.main_player.set_bet()
-            print (self.main_player.bet)
-
+            print ("betting chip working")
+            
         self.bet_btn = Buttons(player_place_bet, btn_dict["bet_grey"],btn_dict["bet_up"], btn_dict["bet_down"], BTN_START_X, BTN_START_Y)
         self.btn_imgs.append(self.bet_btn)
         self.deal_btn = Buttons(self.deal_table, btn_dict["deal_grey"],btn_dict["deal_up"], btn_dict["deal_down"], BTN_START_X+100, BTN_START_Y)
@@ -135,21 +135,42 @@ class TheGame():
         self.stand_btn = Buttons(self.stand, btn_dict["stand_grey"],btn_dict["stand_up"], btn_dict["stand_down"], BTN_START_X+300, BTN_START_Y, False)
         self.btn_imgs.append(self.stand_btn)
 
+    
+    
+    def create_chip_btns(self):
+        
+        def chip_btn_action():
+            print ("Chip button has been pressed")
+             
+        btn_dict = generate_images()
+        btn_x = 10
+        btn_y = 590
+        numbers = [5,10,20,50,100]
+        for num in numbers:
+            bet_btn = Chip_button(chip_btn_action, btn_dict[f"chip_{num}_up"],btn_dict[f"chip_{num}_down"], btn_x, btn_y, num)
+            self.chip_btn_images.append(bet_btn)
+            btn_x += 70
+        
+    
+
     def draw_bet (self):
         if self.main_player.bet_made:
-            self.table.blit(self.coin_img,(100,520)) 
+            self.screen.blit(self.coin_img,(100,520)) 
 
     def draw_all_graphics(self):
         self.screen.blit(self.table,(0,0))
-        self.main_deck.draw_deck(self.table, (105, 270))
-        self.draw_bet()
+        self.main_deck.draw_deck(self.screen, (105, 270))
+        #drawing the betting chips
+        for btn in self.chip_btn_images:
+            btn.draw_button(self.screen)
+        #drawing the game buttons
         for btn in self.btn_imgs:
-            btn.draw_button(self.table)
+            btn.draw_button(self.screen)
         self.draw_hand_cards(self.main_player.hand)
         self.draw_hand_cards(self.the_dealer.hand)
     
     def draw_back_card(self, x, y):
-        CardImages().draw_card_back(x,y,self.table)
+        CardImages().draw_card_back(x,y,self.screen)
 
     #@param hand_list needs to hold Card() objects
     #loops through CardImage().draw_card to blit card to screen 
@@ -165,9 +186,14 @@ class TheGame():
         for btn in self.btn_imgs:
             if btn.check_collide(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]):
                 btn.click()
+        for btn in self.chip_btn_images:
+            if btn.check_collide(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]):
+                btn.click()
 
     def reset_buttons(self):
         for btn in self.btn_imgs:
+            btn.reset_image()
+        for btn in self.chip_btn_images:
             btn.reset_image()
         
 
@@ -209,9 +235,8 @@ def main():
         
         screen.fill(config.BLACK)
         game.draw_all_graphics()
-        
         pygame.display.update()
-
+        
 
     pygame.quit()	
 

@@ -4,7 +4,7 @@
 #constructor (self, chip_value, img)
 #class betting()
 
-class Chips():
+class Chip():
     
     def __init__ (self, chip_value, img, x, y ):
         self.chip_value = chip_value
@@ -43,12 +43,12 @@ class Betting():
         
         return self.betting_total
 
-    def add_to_total(self, chip_key: Chips):
+    def add_to_total(self, chip_key: Chip):
         
         chip_key.add_chip()
         self.betting_total += self.chips[chip_key].get_chip_value() 
         
-    def remove_from_total(self, chip_key: Chips):
+    def remove_from_total(self, chip_key: Chip):
         
         if self.chips[chip_key].remove_chip():
             self.betting_total -= self.chips[chip_key].get_chip_value() 
