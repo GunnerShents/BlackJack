@@ -9,7 +9,7 @@ from os import path, listdir
 
 class Chip():
     
-    def __init__ (self, chip_value, img, x, y ):
+    def __init__ (self, chip_value, img, x=0, y=0):
         self.chip_value = chip_value
         self.image = img
         self.x = x
@@ -26,46 +26,44 @@ class Betting():
     
     def __init__ (self):
         
-        self.betting_total = 0
-        self.chips = {}
+        self.total = 0
         self.bets_placed = []
-        #self.all_images = buttons.generate_images()
+
     
     def draw_total_bet(self, area):
-        for chip in self.bets_placed:
-            chip.draw_chip(area)
+        if len(self.bets_placed) > 0:
+            chip_x = 100
+            chip_y = 550
+            for chip in self.bets_placed:
+                chip.x = chip_x
+                chip.y = chip_y
+                chip.draw_chip(area)
+                chip_y -= 4
             
     def get_total(self):
-        return self.betting_total
+        return self.total
 
-    def create_chip(self, value, image):
-        x = 100
-        y = 500
-        y_increase = -6
-        num = self.get_position()+1  
-        new_chip = Chip(value, image, x, y+(y_increase*num))
+    def create_chip(self, value, image):    
+        new_chip = Chip(value, image)
         self.bets_placed.append(new_chip)
-        self.show_chips()
-        
+        self.total += value
+        print (self.get_total())
+
     def check_stack(self, value):
-        for chip in self.bets_placed:
-            if chip.chip_value == value:
-                return True
-            else:
-                return False
+        return any(chip.chip_value == value for chip in self.bets_placed)
     
     def remove_chip(self, value):
-        for 
-        
+        if self.check_stack(value):
+            for chip in reversed(self.bets_placed):
+                if chip.chip_value == value:
+                    self.total -= chip.chip_value
+                    self.bets_placed.remove(chip)
+                    break
+        print(self.get_total())
+            
     def show_chips(self):
         for chip in self.bets_placed:
             print(chip.chip_value)
         
-    def get_position(self):
-        return len(self.bets_placed)
-        
-    def remove_from_total(self, chip_key: Chip):
-        if self.chips[chip_key].remove_chip():
-            self.betting_total -= self.chips[chip_key].get_chip_value() 
-        
-bet = Betting()
+         
+    

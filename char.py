@@ -98,11 +98,13 @@ class Player(Character):
         self.card_two_y_pos = 496
 
     #checks bet is valid, sets self.bet and deducts bet from balance.
-    def set_bet(self, amount=20):
-        
+    def set_bet(self, amount):
         if not self.bet_made:
             self.bet = amount
             self.bet_made = True
+    
+    def get_bet(self):
+        return self.bet
     
     def black_jack(self):
 

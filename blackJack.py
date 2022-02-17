@@ -128,7 +128,8 @@ class TheGame():
             self.hit(self.main_player)
             
         def player_place_bet():
-            print ("betting chip working")
+            self.main_player.set_bet(self.player_bet.get_total())
+            print(self.main_player.get_bet())
             
         self.bet_btn = Buttons(player_place_bet, self.btn_dict["bet_grey"],self.btn_dict["bet_up"], self.btn_dict["bet_down"], BTN_START_X, BTN_START_Y)
         self.btn_imgs.append(self.bet_btn)
