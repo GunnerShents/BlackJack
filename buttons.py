@@ -16,6 +16,7 @@ def generate_images():
             btn_dict[btn] = pygame.transform.scale(btn_dict[btn],((config.BUTTON_WIDTH/5)*3, (config.BUTTON_HEIGHT/5)*3))
         else:
            btn_dict[btn] = pygame.transform.scale(btn_dict[btn],(config.BUTTON_WIDTH, config.BUTTON_HEIGHT))
+    
     return btn_dict           
 
 
@@ -78,7 +79,8 @@ class Chip_button():
         self.value = value
     
     def click(self):
-        self.on_click()
+        self.on_click(self.value)
+        
     
     def draw_button (self, area):
         

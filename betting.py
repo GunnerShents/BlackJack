@@ -1,4 +1,7 @@
-
+import buttons 
+import pygame
+import config
+from os import path, listdir 
 
 #class Chip()
 #constructor (self, chip_value, img)
@@ -13,43 +16,56 @@ class Chip():
         self.y = y
         self.chip_number = 0 
     
-    #draw method()
+    def draw_chip(self, area):
+        area.blit(self.image,(self.x, self.y))
     
-    def add_chip(self):
-        self.chip_number += 1
-    
-    def remove_chip(self):    
-        if self.chip_number > 0:
-            self.chip_number -= 1 
-            return True
-            
-    def get_num_chips(self):
-        
-        return self.chip_number
-    
-    def get_chip_value(self):
-        
+    def get_chip_value(self):    
         return self.chip_value
     
 class Betting():
     
-    def __ini__ (self):
+    def __init__ (self):
+        
         self.betting_total = 0
         self.chips = {}
+        self.bets_placed = []
+        #self.all_images = buttons.generate_images()
     
-    #create the chip objects
-    
+    def draw_total_bet(self, area):
+        for chip in self.bets_placed:
+            chip.draw_chip(area)
+            
     def get_total(self):
-        
         return self.betting_total
 
-    def add_to_total(self, chip_key: Chip):
+    def create_chip(self, value, image):
+        x = 100
+        y = 500
+        y_increase = -6
+        num = self.get_position()+1  
+        new_chip = Chip(value, image, x, y+(y_increase*num))
+        self.bets_placed.append(new_chip)
+        self.show_chips()
         
-        chip_key.add_chip()
-        self.betting_total += self.chips[chip_key].get_chip_value() 
+    def check_stack(self, value):
+        for chip in self.bets_placed:
+            if chip.chip_value == value:
+                return True
+            else:
+                return False
+    
+    def remove_chip(self, value):
+        for 
+        
+    def show_chips(self):
+        for chip in self.bets_placed:
+            print(chip.chip_value)
+        
+    def get_position(self):
+        return len(self.bets_placed)
         
     def remove_from_total(self, chip_key: Chip):
-        
         if self.chips[chip_key].remove_chip():
             self.betting_total -= self.chips[chip_key].get_chip_value() 
         
+bet = Betting()
