@@ -45,7 +45,6 @@ class TheGame():
     def deal_table(self):
         
         self.need_back = True
-        self.reset_hand()
         print (self.main_player.bet)
         self.hit(self.main_player)
         self.hit(self.the_dealer)
@@ -98,7 +97,7 @@ class TheGame():
                 self.hit(self.the_dealer)
                 self.the_dealer.show_cards()
             self.check_result()
-            
+        self.deal_btn.set_active(False)
         self.stand_btn.set_active(False)
         self.hit_btn.set_active(False)
     
@@ -117,7 +116,9 @@ class TheGame():
         else:
             self.main_player.draw()
         self.deal_btn.set_active(True)
-       
+        #reset bets and chip stack
+        self.main_player.reset_bet()
+        self.player_bet.reset()
 
     def create_game_buttons(self):
         
@@ -130,10 +131,12 @@ class TheGame():
         def player_place_bet():
             self.main_player.set_bet(self.player_bet.get_total())
             print(self.main_player.get_bet())
+            self.deal_btn.set_active(True)
+            self.reset_hand()
             
         self.bet_btn = Buttons(player_place_bet, self.btn_dict["bet_grey"],self.btn_dict["bet_up"], self.btn_dict["bet_down"], BTN_START_X, BTN_START_Y)
         self.btn_imgs.append(self.bet_btn)
-        self.deal_btn = Buttons(self.deal_table, self.btn_dict["deal_grey"],self.btn_dict["deal_up"], self.btn_dict["deal_down"], BTN_START_X+100, BTN_START_Y)
+        self.deal_btn = Buttons(self.deal_table, self.btn_dict["deal_grey"],self.btn_dict["deal_up"], self.btn_dict["deal_down"], BTN_START_X+100, BTN_START_Y, False)
         self.btn_imgs.append(self.deal_btn)
         self.hit_btn = Buttons(hit_main_player, self.btn_dict["hit_grey"],self.btn_dict["hit_up"], self.btn_dict["hit_down"], BTN_START_X+200, BTN_START_Y, False)
         self.btn_imgs.append(self.hit_btn)

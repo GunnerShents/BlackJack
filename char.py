@@ -73,11 +73,11 @@ class Character():
 
         return len(self.hand) == 2 and self.total == 21
 
-    #Emptys the hand destroying cards, sets self.bet to zero.
     def reset(self):
         self.hand = []
         self.bust = False
         self.total = 0
+   
     
         
 class Player(Character):
@@ -131,7 +131,9 @@ class Player(Character):
         
         return self.total == 21 and len(self.hand) == 2
         
-
+    def reset_bet(self):
+        self.bet = 0
+        self.bet_made = False
 
 class Dealer(Character):
 
@@ -146,11 +148,6 @@ class Dealer(Character):
         self.card_two_x_pos = 316
         self.card_two_y_pos = 137
         self.not_dealers_turn = True
-
-    def reset(self):
-        self.hand = []
-        self.total = 0
-        self.bust = False
 
     def check_for_stand(self):
         total = self.get_total()

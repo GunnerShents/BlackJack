@@ -29,6 +29,9 @@ class Betting():
         self.total = 0
         self.bets_placed = []
 
+    def reset(self):
+        self.total = 0
+        self.bets_placed = []
     
     def draw_total_bet(self, area):
         if len(self.bets_placed) > 0:
@@ -60,10 +63,7 @@ class Betting():
                     self.bets_placed.remove(chip)
                     break
         print(self.get_total())
-            
-    def show_chips(self):
-        for chip in self.bets_placed:
-            print(chip.chip_value)
+  
         
          
     
