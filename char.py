@@ -97,6 +97,9 @@ class Player(Character):
         self.card_two_x_pos = 317
         self.card_two_y_pos = 496
 
+    def get_balance(self):
+        return self.balance
+    
     #checks bet is valid, sets self.bet and deducts bet from balance.
     def set_bet(self, amount):
         if not self.bet_made:

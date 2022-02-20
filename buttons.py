@@ -22,7 +22,7 @@ def generate_images():
 
 class Buttons():
 
-    def __init__ (self, on_click, grey_image, button_up_img, button_down_img, x ,y, active=True):
+    def __init__ (self, on_click, grey_image, button_up_img, button_down_img, x ,y, active=False):
         assert callable(on_click)
         self.on_click = on_click
         self.image = [button_up_img, button_down_img, grey_image]
@@ -70,6 +70,7 @@ class Chip_button():
     
     def __init__ (self, on_click, button_up_img, button_down_img, x ,y, value):
         
+        self.active = True
         self.on_click = on_click
         self.image = [button_up_img, button_down_img]
         self.index = 0
@@ -79,8 +80,14 @@ class Chip_button():
         self.value = value
     
     def click(self):
-        self.on_click(self.value)
-        
+        if self.get_active():
+            self.on_click(self.value)
+    
+    def set_active(self, bool:bool):
+        self.active = bool
+    
+    def get_active(self):
+        return self.active
     
     def draw_button (self, area):
         

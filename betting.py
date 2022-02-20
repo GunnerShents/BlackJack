@@ -24,7 +24,7 @@ class Chip():
     
 class Betting():
     
-    def __init__ (self):
+    def __init__ (self,):
         
         self.total = 0
         self.bets_placed = []
@@ -46,11 +46,12 @@ class Betting():
     def get_total(self):
         return self.total
 
-    def create_chip(self, value, image):    
-        new_chip = Chip(value, image)
-        self.bets_placed.append(new_chip)
-        self.total += value
-        print (self.get_total())
+    def create_chip(self, value, image, current_player_balance):    
+        if self.get_total() + value <= current_player_balance:
+            new_chip = Chip(value, image)
+            self.bets_placed.append(new_chip)
+            self.total += value
+            print (self.get_total())
 
     def check_stack(self, value):
         return any(chip.chip_value == value for chip in self.bets_placed)

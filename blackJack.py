@@ -55,6 +55,7 @@ class TheGame():
         self.deal_btn.set_active(False)
         self.stand_btn.set_active(True)
         self.hit_btn.set_active(True)
+        
     
     def get_card_coords(self, card_position: int, player: Character) -> tuple[int, int]:
         if player == self.main_player:
@@ -100,6 +101,9 @@ class TheGame():
         self.deal_btn.set_active(False)
         self.stand_btn.set_active(False)
         self.hit_btn.set_active(False)
+        self.bet_btn.set_active(False)
+        for btn in self.chip_btn_images:
+            btn.set_active(True)
     
 
     #checks player score to the dealers score
@@ -132,23 +136,27 @@ class TheGame():
             self.main_player.set_bet(self.player_bet.get_total())
             print(self.main_player.get_bet())
             self.deal_btn.set_active(True)
+            self.bet_btn.set_active(False)
             self.reset_hand()
+            for btn in self.chip_btn_images:
+                btn.set_active(False)
             
         self.bet_btn = Buttons(player_place_bet, self.btn_dict["bet_grey"],self.btn_dict["bet_up"], self.btn_dict["bet_down"], BTN_START_X, BTN_START_Y)
         self.btn_imgs.append(self.bet_btn)
-        self.deal_btn = Buttons(self.deal_table, self.btn_dict["deal_grey"],self.btn_dict["deal_up"], self.btn_dict["deal_down"], BTN_START_X+100, BTN_START_Y, False)
+        self.deal_btn = Buttons(self.deal_table, self.btn_dict["deal_grey"],self.btn_dict["deal_up"], self.btn_dict["deal_down"], BTN_START_X+100, BTN_START_Y)
         self.btn_imgs.append(self.deal_btn)
-        self.hit_btn = Buttons(hit_main_player, self.btn_dict["hit_grey"],self.btn_dict["hit_up"], self.btn_dict["hit_down"], BTN_START_X+200, BTN_START_Y, False)
+        self.hit_btn = Buttons(hit_main_player, self.btn_dict["hit_grey"],self.btn_dict["hit_up"], self.btn_dict["hit_down"], BTN_START_X+200, BTN_START_Y)
         self.btn_imgs.append(self.hit_btn)
-        self.stand_btn = Buttons(self.stand, self.btn_dict["stand_grey"],self.btn_dict["stand_up"], self.btn_dict["stand_down"], BTN_START_X+300, BTN_START_Y, False)
+        self.stand_btn = Buttons(self.stand, self.btn_dict["stand_grey"],self.btn_dict["stand_up"], self.btn_dict["stand_down"], BTN_START_X+300, BTN_START_Y)
         self.btn_imgs.append(self.stand_btn)
     
     def create_chip_btns(self):
         
         def chip_btn_action(value):
             
-            self.player_bet.create_chip(value, self.btn_dict[f"chip_{value}_up"])
-            
+            self.player_bet.create_chip(value, self.btn_dict[f"chip_{value}_up"], self.main_player.get_balance())
+            #self.deal_btn.set_active(True)
+            self.bet_btn.set_active(True)
              
         self.btn_dict = generate_images()
         btn_x = 10
