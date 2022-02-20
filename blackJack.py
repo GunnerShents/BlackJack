@@ -141,13 +141,13 @@ class TheGame():
             for btn in self.chip_btn_images:
                 btn.set_active(False)
             
-        self.bet_btn = Buttons(player_place_bet, self.btn_dict["bet_grey"],self.btn_dict["bet_up"], self.btn_dict["bet_down"], BTN_START_X, BTN_START_Y)
+        self.bet_btn = Game_button(player_place_bet, self.btn_dict["bet_up"], self.btn_dict["bet_down"], BTN_START_X, BTN_START_Y, self.btn_dict["bet_grey"])
         self.btn_imgs.append(self.bet_btn)
-        self.deal_btn = Buttons(self.deal_table, self.btn_dict["deal_grey"],self.btn_dict["deal_up"], self.btn_dict["deal_down"], BTN_START_X+100, BTN_START_Y)
+        self.deal_btn = Game_button(self.deal_table, self.btn_dict["deal_up"], self.btn_dict["deal_down"], BTN_START_X+100, BTN_START_Y, self.btn_dict["deal_grey"])
         self.btn_imgs.append(self.deal_btn)
-        self.hit_btn = Buttons(hit_main_player, self.btn_dict["hit_grey"],self.btn_dict["hit_up"], self.btn_dict["hit_down"], BTN_START_X+200, BTN_START_Y)
+        self.hit_btn = Game_button(hit_main_player, self.btn_dict["hit_up"], self.btn_dict["hit_down"], BTN_START_X+200, BTN_START_Y, self.btn_dict["hit_grey"])
         self.btn_imgs.append(self.hit_btn)
-        self.stand_btn = Buttons(self.stand, self.btn_dict["stand_grey"],self.btn_dict["stand_up"], self.btn_dict["stand_down"], BTN_START_X+300, BTN_START_Y)
+        self.stand_btn = Game_button(self.stand, self.btn_dict["stand_up"], self.btn_dict["stand_down"], BTN_START_X+300, BTN_START_Y, self.btn_dict["stand_grey"])
         self.btn_imgs.append(self.stand_btn)
     
     def create_chip_btns(self):
@@ -248,7 +248,7 @@ def main():
                 running = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 #print (pygame.mouse.get_pos())
-                if pygame.mouse.get_pressed() == (1,0,0): 
+                if pygame.mouse.get_pressed() == (1,0,0):
                     game.event_handler_on_click()
                 if pygame.mouse.get_pressed() == (0,0,1): 
                     game.event_handler_right_click()
