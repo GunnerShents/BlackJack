@@ -13,7 +13,7 @@ print("Seed was:", seed)
 
 
 class TheGame:
-    def __init__(self, screen, main_player: Player):
+    def __init__(self, screen:pygame.Surface, main_player: Player):
         self.screen = screen
         # ------------------------------------------------------------------------------------
         # Load pictures

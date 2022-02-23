@@ -2,6 +2,7 @@ import random, pygame
 from os import path
 import os
 import config
+from typing import Optional
 
 # -------------------------------------------------------------------
 
@@ -11,7 +12,7 @@ class Card:
     Creates a card that holds the number and suit.
     """
 
-    def __init__(self, num, suit):
+    def __init__(self, name:str, suit:str):
 
         self.value = {
             "Ace": 11,
@@ -28,21 +29,21 @@ class Card:
             "Queen": 10,
             "King": 10,
         }
-        self.number = num
+        self.name = name
         self.suit = suit
         self.width = 50
-        self.x = None
-        self.y = None
+        self.x:Optional[int] = None
+        self.y:Optional[int] = None
 
     # returns the number and suit.
     def __str__(self):
 
-        return f"{self.number} of {self.suit}"
+        return f"{self.name} of {self.suit}"
 
     # return the total amount in hand using the value dictionary.
-    def get_card_value(self):
+    def get_card_value(self) -> int:
 
-        return self.value[self.number]
+        return self.value[self.name]
 
 
 class CardImages:
@@ -56,9 +57,9 @@ class CardImages:
             path.join(config.IMG_DIR, "BJ_cardBack.png")
         ).convert_alpha()
         self.card_back_img = pygame.transform.scale(card_back, (50, 70))
-        self.suits = {}
-        self.red_numbers = {}
-        self.black_numbers = {}
+        self.suits:dict[str, pygame.surface.Surface] = {}
+        self.red_numbers:dict[str, pygame.surface.Surface] = {}
+        self.black_numbers:dict[str, pygame.surface.Surface] = {}
 
         self.create_suits_dict()
         self.num_dict("b", self.black_numbers)
@@ -75,7 +76,7 @@ class CardImages:
                 path.join(suits_path, image)
             ).convert_alpha()
 
-    def num_dict(self, colour, num_dict):
+    def num_dict(self, colour:str, num_dict:dict[str,pygame.surface.Surface]):
 
         num_path = path.join(config.IMG_DIR, "BJ_numbers")
 
@@ -87,18 +88,19 @@ class CardImages:
                     path.join(num_path, image)
                 ).convert_alpha()
 
-    def draw_card_back(self, x, y, area):
+    def draw_card_back(self, x:int, y:int, area:pygame.Surface):
 
         area.blit(self.card_back_img, (x, y))
 
-    def draw_card(self, area, card):
+    def draw_card(self, area:pygame.Surface, card:Card):
 
-        colour_dict = self.red_numbers
+        colour_dict:dict[str, pygame.surface.Surface] = self.red_numbers
         if card.suit == "Spades" or card.suit == "Clubs":
             colour_dict = self.black_numbers
-
+        if card.x is None or card.y is None: 
+            raise RuntimeError("Aaah")
         area.blit(self.blank_card_img, (card.x, card.y))
-        area.blit(colour_dict[card.number], (card.x + 15, card.y + 10))
+        area.blit(colour_dict[card.name], (card.x + 15, card.y + 10))
         area.blit(self.suits[card.suit], (card.x + 15, card.y + 40))
 
 
@@ -129,7 +131,7 @@ class Deck:
 
     # Creates a fresh deck of 52 cards.
     def create_deck(self):
-        self.deck = []
+        self.deck:list[Card] = []
         for suit in self.suits:
             for num in self.numbers:
                 self.deck.append(Card(num, suit))
@@ -147,13 +149,13 @@ class Deck_holder:
         deck = pygame.image.load(
             path.join(config.IMG_DIR, "BJ_deck.png")
         ).convert_alpha()
-        self.holder = []
+        self.holder:list[Card] = []
         self.deck_img = pygame.transform.scale(deck, (55, 75))
 
     # Takes an integer of how many decks you want held in the holder.
-    def create_multi_decks(self, number_of_wanted_decks):
+    def create_multi_decks(self, number_of_wanted_decks:int):
         self.holder = []
-        for deck in range(number_of_wanted_decks):
+        for _ in range(number_of_wanted_decks):
             new_deck = Deck()
             new_deck.create_deck()
             self.holder.extend(new_deck.deck)
@@ -179,6 +181,6 @@ class Deck_holder:
 
         return self.holder.pop()
 
-    def draw_deck(self, area, co_ords):
+    def draw_deck(self, area:pygame.Surface, co_ords:tuple[int,int]):
 
         area.blit(self.deck_img, (co_ords))
