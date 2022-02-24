@@ -21,4 +21,4 @@ sh==1.14.2
 six==1.16.0
 tomli==2.0.1
 typing-extensions==4.1.1
-https://github.com/zulip/zulint/archive/6cc46d23906757895e917cc75e231f81f824a31d.zip#egg=zulint==0.0.1
+adamlint==1.0.0
