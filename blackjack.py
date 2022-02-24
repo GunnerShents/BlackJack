@@ -1,19 +1,23 @@
-import random, pygame, sys
+import random
+import sys
 from os import path
-from cardClasses import *
-from char import Character, Player, Dealer
+from typing import List, Tuple
+
+import pygame
+
 import config
-from buttons import *
 from betting import Betting
+from buttons import Chip_button, Game_button, generate_images
+from cardclasses import Card, CardImages, Deck_holder
+from char import Character, Dealer, Player
 
 # random.seed()
 seed = random.randrange(sys.maxsize)
-rng = random.seed()
-print("Seed was:", seed)
+random.seed()
 
 
 class TheGame:
-    def __init__(self, screen:pygame.Surface, main_player: Player):
+    def __init__(self, screen: pygame.surface.Surface, main_player: Player) -> None:
         self.screen = screen
         # ------------------------------------------------------------------------------------
         # Load pictures
@@ -31,12 +35,10 @@ class TheGame:
         # dealer attributes
         self.the_dealer = Dealer()
         # images and button attributes
-        self.btn_imgs = []
-        self.chip_btn_images = []
+        self.btn_imgs: List[Game_button] = []
+        self.chip_btn_images: List[Chip_button] = []
         self.btn_dict = generate_images()
-        coin_img = pygame.image.load(
-            os.path.join(config.IMG_DIR, "coin.png")
-        ).convert_alpha()
+        coin_img = pygame.image.load(path.join(config.IMG_DIR, "coin.png")).convert_alpha()
         self.coin_img = pygame.transform.scale(coin_img, (config.COIN_X, config.COIN_Y))
         self.card_images = CardImages()
         self.create_game_buttons()
@@ -47,7 +49,7 @@ class TheGame:
         self.player_bet = Betting()
 
     # deal one card to each player in the self.total_player list
-    def deal_table(self):
+    def deal_table(self) -> None:
 
         self.need_back = True
         print(self.main_player.bet)
@@ -61,7 +63,7 @@ class TheGame:
         self.stand_btn.set_active(True)
         self.hit_btn.set_active(True)
 
-    def get_card_coords(self, card_position: int, player: Character) -> tuple[int, int]:
+    def get_card_coords(self, card_position: int, player: Character) -> Tuple[int, int]:
         if player == self.main_player:
             if card_position == 1:
                 return (235, 496)
@@ -77,19 +79,19 @@ class TheGame:
         else:
             return (0, 0)
 
-    def reset_hand(self):
+    def reset_hand(self) -> None:
 
         self.main_player.reset()
         self.the_dealer.reset()
 
-    def hit(self, person: Character):
+    def hit(self, person: Character) -> None:
         """Hit the given person."""  # crypto docstring
         if not person.bust:
             x, y = self.get_card_coords(len(person.hand) + 1, person)
             person.hit(self.main_deck, x, y)
             print(f"{person.name} has {person.get_total()}")
 
-    def stand(self):
+    def stand(self) -> None:
 
         self.need_back = False
         # returns true if dealer has 17 - 21
@@ -111,7 +113,7 @@ class TheGame:
 
     # checks player score to the dealers score
     # calculates the bet return.
-    def check_result(self):
+    def check_result(self) -> None:
         if self.main_player.check_bust():
             self.main_player.lost()
         elif self.the_dealer.check_bust():
@@ -127,15 +129,15 @@ class TheGame:
         self.main_player.reset_bet()
         self.player_bet.reset()
 
-    def create_game_buttons(self):
+    def create_game_buttons(self) -> None:
 
         BTN_START_X = 100
         BTN_START_Y = 630
 
-        def hit_main_player():
+        def hit_main_player() -> None:
             self.hit(self.main_player)
 
-        def player_place_bet():
+        def player_place_bet() -> None:
             self.main_player.set_bet(self.player_bet.get_total())
             print(self.main_player.get_bet())
             self.deal_btn.set_active(True)
@@ -181,8 +183,8 @@ class TheGame:
         )
         self.btn_imgs.append(self.stand_btn)
 
-    def create_chip_btns(self):
-        def chip_btn_action(value):
+    def create_chip_btns(self) -> None:
+        def chip_btn_action(value: int) -> None:
 
             self.player_bet.create_chip(
                 value, self.btn_dict[f"chip_{value}_up"], self.main_player.get_balance()
@@ -206,30 +208,30 @@ class TheGame:
             self.chip_btn_images.append(bet_btn)
             btn_x += 70
 
-    def draw_bet(self):
+    def draw_bet(self) -> None:
         if self.main_player.bet_made:
             self.screen.blit(self.coin_img, (100, 520))
 
-    def draw_all_graphics(self):
+    def draw_all_graphics(self) -> None:
         self.screen.blit(self.table, (0, 0))
         self.main_deck.draw_deck(self.screen, (105, 270))
         # drawing the betting chips
         self.player_bet.draw_total_bet(self.screen)
         # drawing the betting chips
-        for btn in self.chip_btn_images:
-            btn.draw_button(self.screen)
+        for cbtn in self.chip_btn_images:
+            cbtn.draw_button(self.screen)
         # drawing the game buttons
-        for btn in self.btn_imgs:
-            btn.draw_button(self.screen)
+        for gbtn in self.btn_imgs:
+            gbtn.draw_button(self.screen)
         self.draw_hand_cards(self.main_player.hand)
         self.draw_hand_cards(self.the_dealer.hand)
 
-    def draw_back_card(self, x, y):
+    def draw_back_card(self, x: int, y: int) -> None:
         CardImages().draw_card_back(x, y, self.screen)
 
     # @param hand_list needs to hold Card() objects
     # loops through CardImage().draw_card to blit card to screen
-    def draw_hand_cards(self, hand_list):
+    def draw_hand_cards(self, hand_list: List[Card]) -> None:
         if hand_list == self.the_dealer.hand and self.need_back:
             self.draw_back_card(235, 137)
             self.card_images.draw_card(self.screen, hand_list[1])
@@ -237,30 +239,30 @@ class TheGame:
             for card in hand_list:
                 self.card_images.draw_card(self.screen, card)
 
-    def event_handler_on_click(self):
-        for btn in self.btn_imgs:
-            if btn.check_collide(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]):
-                btn.click()
-        for btn in self.chip_btn_images:
-            if btn.check_collide(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]):
-                btn.click()
+    def event_handler_on_click(self) -> None:
+        for gbtn in self.btn_imgs:
+            if gbtn.check_collide(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]):
+                gbtn.click()
+        for cbtn in self.chip_btn_images:
+            if cbtn.check_collide(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]):
+                cbtn.click()
 
-    def event_handler_right_click(self):
-        for btn in self.chip_btn_images:
-            if btn.check_collide(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]):
-                self.player_bet.remove_chip(btn.value)
+    def event_handler_right_click(self) -> None:
+        for cbtn in self.chip_btn_images:
+            if cbtn.check_collide(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]):
+                self.player_bet.remove_chip(cbtn.value)
 
-    def reset_buttons(self):
-        for btn in self.btn_imgs:
-            btn.reset_image()
-        for btn in self.chip_btn_images:
-            btn.reset_image()
+    def reset_buttons(self) -> None:
+        for gbtn in self.btn_imgs:
+            gbtn.reset_image()
+        for cbtn in self.chip_btn_images:
+            cbtn.reset_image()
 
 
-def main():
+def main() -> None:
     pygame.init()
 
-    screen = pygame.display.set_mode((config.WIDTH, config.HEIGHT))
+    screen: pygame.surface.Surface = pygame.display.set_mode((config.WIDTH, config.HEIGHT))
     pygame.display.set_caption("Black Jack")
     clock = pygame.time.Clock()
     config.IMG_DIR = path.join(path.dirname(__file__), "images")

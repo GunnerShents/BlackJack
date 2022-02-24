@@ -1,16 +1,22 @@
+from os import listdir, path
+from typing import Callable, Dict
+
 import pygame
+from pygame.surface import Surface
+
 import config
-from os import path, listdir
+
 
 # ----------------------------------------------------------------
-def generate_images():
-    btn_dict = {}
+def generate_images() -> Dict[str, Surface]:
+    btn_dict: Dict[str, Surface] = {}
     for file in listdir(config.IMG_DIR):
         f = path.join(config.IMG_DIR, file)
         if path.isfile(f):
             btn_dict[file[:-4]] = pygame.image.load(f).convert_alpha()
 
     # loop scales each image value
+    btn: str
     for btn in btn_dict.keys():
         if btn[:5] == "chip_":
             btn_dict[btn] = pygame.transform.scale(
@@ -26,7 +32,15 @@ def generate_images():
 
 
 class Button:
-    def __init__(self, on_click, button_up_img, button_down_img, x, y, active):
+    def __init__(
+        self,
+        on_click: Callable[..., None],
+        button_up_img: Surface,
+        button_down_img: Surface,
+        x: int,
+        y: int,
+        active: bool,
+    ):
         assert callable(on_click)
         self.on_click = on_click
         self.image = [button_up_img, button_down_img]
@@ -41,14 +55,14 @@ class Button:
     def get_active(self) -> bool:
         return self.active
 
-    def draw_button(self, area) -> None:
+    def draw_button(self, area: Surface) -> None:
         area.blit(self.image[self.index], (self.rect))
 
-    def set_index(self, num) -> None:
+    def set_index(self, num: int) -> None:
         self.index = num
 
     # x, y are the mouse x, y co_ords
-    def check_collide(self, x, y) -> bool:
+    def check_collide(self, x: int, y: int) -> bool:
         if self.rect.collidepoint(x, y) and self.get_active():
             self.set_index(1)
             return True
@@ -56,7 +70,15 @@ class Button:
 
 
 class Game_button(Button):
-    def __init__(self, on_click, button_up_img, button_down_img, x, y, grey_image):
+    def __init__(
+        self,
+        on_click: Callable[..., None],
+        button_up_img: Surface,
+        button_down_img: Surface,
+        x: int,
+        y: int,
+        grey_image: Surface,
+    ):
         super().__init__(on_click, button_up_img, button_down_img, x, y, active=False)
         self.grey_img = grey_image
         self.image.append(self.grey_img)
@@ -75,7 +97,15 @@ class Game_button(Button):
 
 
 class Chip_button(Button):
-    def __init__(self, on_click, button_up_img, button_down_img, x, y, value):
+    def __init__(
+        self,
+        on_click: Callable[..., None],
+        button_up_img: Surface,
+        button_down_img: Surface,
+        x: int,
+        y: int,
+        value: int,
+    ) -> None:
         super().__init__(on_click, button_up_img, button_down_img, x, y, active=True)
         self.value = value
 
