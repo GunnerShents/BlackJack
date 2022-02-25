@@ -5,9 +5,9 @@ from cardclasses import Card, Deck_holder
 
 class Character:
     """
-    Abstract class holds cards, prints the cards in the terminal. Checks 
-    for bust, black jack, actions a hit and adds to the hand list. Returns 
-    the total and will calculate aces correctly determining when they should 
+    Abstract class holds cards, prints the cards in the terminal. Checks
+    for bust, black jack, actions a hit and adds to the hand list. Returns
+    the total and will calculate aces correctly determining when they should
     be value 11 or 1.
     """
 
@@ -79,7 +79,6 @@ class Character:
         self.hand = []
         self.bust = False
         self.total = 0
-       
 
 
 class Player(Character):
@@ -89,6 +88,7 @@ class Player(Character):
     Will also hold the balance and current bet. Stores x ,y for where the
     cards should render on the game board.
     """
+
     def __init__(self, name: str, balance: int) -> None:
 
         # Load coin image and transform the size.
@@ -146,12 +146,12 @@ class Player(Character):
         self.bet_made = False
 
 
-
 class Dealer(Character):
     """
-    Inherts from Character(). Holds the x, y for where the cards render on 
+    Inherts from Character(). Holds the x, y for where the cards render on
     the board. Checks for stand function.
     """
+
     def __init__(self) -> None:
 
         self.hand = []

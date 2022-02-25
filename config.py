@@ -1,7 +1,7 @@
 import os
 
 # Constrant variables
-WIDTH = 600
+WIDTH = 900
 HEIGHT = 700
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)

@@ -52,12 +52,13 @@ class Card:
 
 class CardImages:
     """
-    Creates the card graphics for the game. Namely the face up 
+    Creates the card graphics for the game. Namely the face up
     and the face down cards. Will render black numbers for black suits
     and red numbers for the red suits.
     """
+
     def __init__(self) -> None:
-        #starting postionof blank card.
+        # starting postionof blank card.
         blank_x = 50
         blank_y = 70
         # load images
@@ -108,8 +109,8 @@ class CardImages:
             colour_dict = self.black_numbers
         if card.x is None or card.y is None:
             raise RuntimeError("Aaah")
-        #card(x, y) is top right. name and suit need to be positioned
-        #x + 15(pixels) & y + 10 for the name and 40 for the suit.
+        # card(x, y) is top right. name and suit need to be positioned
+        # x + 15(pixels) & y + 10 for the name and 40 for the suit.
         area.blit(self.blank_card_img, (card.x, card.y))
         area.blit(colour_dict[card.name], (card.x + 15, card.y + 10))
         area.blit(self.suits[card.suit], (card.x + 15, card.y + 40))
