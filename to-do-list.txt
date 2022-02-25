@@ -5,15 +5,16 @@ Jobs to do:
 Working on:
    
     1. Create a chip total displayed under the chip stack. 
-    2. Game will allow player to bet on zero.
+    
 
 Extended project:
     1. Look at adding a split button and logic.
     2. Look at adding a double button and logic.
-    3. Test the game with @crypto.
-    4. All in chip?
-    5. Look at chip amounts changing as you bet 2*5 turns to 1*10
-    6. Add module to format my code. Black - PEP 8. 
+    3. Chicken dinnner - card counting game.
+    4. Test the game with @crypto.
+    5. All in chip?
+    6. Look at chip amounts changing as you bet 2*5 turns to 1*10
+    
 
 Problem found:
    

@@ -7,6 +7,9 @@ from pygame.surface import Surface
 
 
 class Chip:
+    """
+    Creats a chip when the player bets. Draws the chip and can return its value.
+    """
     def __init__(self, chip_value: int, img: Surface, x: int = 0, y: int = 0):
         self.chip_value = chip_value
         self.image = img
@@ -22,6 +25,11 @@ class Chip:
 
 
 class Betting:
+    """
+    Controls the betting logic in the game. Instantiates a chip when the 
+    player bets. Holds the total bet. All chips are held in a list. Chips 
+    can be removed based off their value.
+    """
     def __init__(
         self,
     ) -> None:

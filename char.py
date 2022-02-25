@@ -4,7 +4,12 @@ from cardclasses import Card, Deck_holder
 
 
 class Character:
-    """A character that does stuff"""
+    """
+    Abstract class holds cards, prints the cards in the terminal. Checks 
+    for bust, black jack, actions a hit and adds to the hand list. Returns 
+    the total and will calculate aces correctly determining when they should 
+    be value 11 or 1.
+    """
 
     def __init__(self) -> None:
         self.hand: List[Card] = []
@@ -35,7 +40,6 @@ class Character:
         self.hand.append(new_card)
         self.check_hand()
         if self.check_bust():
-            self.print_bust()
             self.bust = True
 
     # Check hand for bust and check if it holds aces
@@ -63,10 +67,6 @@ class Character:
 
         return self.total > 21
 
-    def print_bust(self) -> None:
-
-        print("You are bust!!")
-
     def get_total(self) -> int:
 
         return self.total
@@ -79,15 +79,22 @@ class Character:
         self.hand = []
         self.bust = False
         self.total = 0
+       
 
 
 class Player(Character):
-    def __init__(self, name: str) -> None:
+    """
+    Inherts form Character(). Holds all the functionality for the player.
+    Calculates the logic for winning, losing, drawing and blackjack.
+    Will also hold the balance and current bet. Stores x ,y for where the
+    cards should render on the game board.
+    """
+    def __init__(self, name: str, balance: int) -> None:
 
         # Load coin image and transform the size.
         self.hand = []
         self.name = name
-        self.balance = 500
+        self.balance = balance
         self.bet = 0
         self.bet_made = False
         self.total = 0
@@ -139,7 +146,12 @@ class Player(Character):
         self.bet_made = False
 
 
+
 class Dealer(Character):
+    """
+    Inherts from Character(). Holds the x, y for where the cards render on 
+    the board. Checks for stand function.
+    """
     def __init__(self) -> None:
 
         self.hand = []

@@ -8,6 +8,8 @@ import config
 
 
 # ----------------------------------------------------------------
+#pulls all graphice into a dictionary, key is the png name.
+#value is the pygame image.
 def generate_images() -> Dict[str, Surface]:
     btn_dict: Dict[str, Surface] = {}
     for file in listdir(config.IMG_DIR):
@@ -15,7 +17,7 @@ def generate_images() -> Dict[str, Surface]:
         if path.isfile(f):
             btn_dict[file[:-4]] = pygame.image.load(f).convert_alpha()
 
-    # loop scales each image value
+    # loop scales each image value and resizes.
     btn: str
     for btn in btn_dict.keys():
         if btn[:5] == "chip_":
@@ -32,6 +34,11 @@ def generate_images() -> Dict[str, Surface]:
 
 
 class Button:
+    """
+    Abstract class, draws the button, checks collide and sets active. Also
+    uses a call back function from the first argument in the constructor back 
+    to the game. 
+    """
     def __init__(
         self,
         on_click: Callable[..., None],
@@ -70,6 +77,10 @@ class Button:
 
 
 class Game_button(Button):
+    """
+    Controls the game buttons running along the bottom of the interface.
+    Inherts form Button(). Game buttons have 3 images.
+    """
     def __init__(
         self,
         on_click: Callable[..., None],
@@ -97,6 +108,10 @@ class Game_button(Button):
 
 
 class Chip_button(Button):
+    """
+    Inherts form Button, this class controls the betting chip buttons.
+    Chip buttons have two images.
+    """
     def __init__(
         self,
         on_click: Callable[..., None],

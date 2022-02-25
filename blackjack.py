@@ -89,7 +89,6 @@ class TheGame:
         if not person.bust:
             x, y = self.get_card_coords(len(person.hand) + 1, person)
             person.hit(self.main_deck, x, y)
-            print(f"{person.name} has {person.get_total()}")
 
     def stand(self) -> None:
 
@@ -189,7 +188,6 @@ class TheGame:
             self.player_bet.create_chip(
                 value, self.btn_dict[f"chip_{value}_up"], self.main_player.get_balance()
             )
-            # self.deal_btn.set_active(True)
             self.bet_btn.set_active(True)
 
         self.btn_dict = generate_images()
@@ -267,7 +265,7 @@ def main() -> None:
     clock = pygame.time.Clock()
     config.IMG_DIR = path.join(path.dirname(__file__), "images")
 
-    player = Player("Phil")
+    player = Player("Phil", 500)
     game = TheGame(screen, player)
     player.show_cards()
     print(player.get_total())

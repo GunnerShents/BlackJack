@@ -51,18 +51,25 @@ class Card:
 
 
 class CardImages:
+    """
+    Creates the card graphics for the game. Namely the face up 
+    and the face down cards. Will render black numbers for black suits
+    and red numbers for the red suits.
+    """
     def __init__(self) -> None:
+        #starting postionof blank card.
+        blank_x = 50
+        blank_y = 70
         # load images
         blank_card = pygame.image.load(
             path.join(config.IMG_DIR, "BJ_blankCard.png")
         ).convert_alpha()
-        self.blank_card_img = pygame.transform.scale(blank_card, (50, 70))
+        self.blank_card_img = pygame.transform.scale(blank_card, (blank_x, blank_y))
         card_back = pygame.image.load(path.join(config.IMG_DIR, "BJ_cardBack.png")).convert_alpha()
-        self.card_back_img = pygame.transform.scale(card_back, (50, 70))
+        self.card_back_img = pygame.transform.scale(card_back, (blank_x, blank_y))
         self.suits: Dict[str, pygame.surface.Surface] = {}
         self.red_numbers: Dict[str, pygame.surface.Surface] = {}
         self.black_numbers: Dict[str, pygame.surface.Surface] = {}
-
         self.create_suits_dict()
         self.num_dict("b", self.black_numbers)
         self.num_dict("r", self.red_numbers)
@@ -101,6 +108,8 @@ class CardImages:
             colour_dict = self.black_numbers
         if card.x is None or card.y is None:
             raise RuntimeError("Aaah")
+        #card(x, y) is top right. name and suit need to be positioned
+        #x + 15(pixels) & y + 10 for the name and 40 for the suit.
         area.blit(self.blank_card_img, (card.x, card.y))
         area.blit(colour_dict[card.name], (card.x + 15, card.y + 10))
         area.blit(self.suits[card.suit], (card.x + 15, card.y + 40))
