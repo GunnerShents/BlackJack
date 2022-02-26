@@ -62,18 +62,20 @@ class TheGame:
         self.hit_btn.set_active(True)
 
     def get_card_coords(self, card_position: int, player: Character) -> Tuple[int, int]:
+        pixel_move = 30
+        card_gap = 60
         if player == self.main_player:
             if card_position == 1:
-                return (235, 496)
+                return self.main_player.get_x_y()
             else:
                 x = card_position - 2
-                return (317 + (30 * x), 496 - (30 * x))
+                return card_gap + self.main_player.get_x_y()[0]+(pixel_move * x), self.main_player.get_x_y()[1] - (pixel_move * x)
         elif player == self.the_dealer:
             if card_position == 1:
                 return self.the_dealer.get_x_y()
             else:
                 x = card_position - 2
-                return  self.the_dealer.get_x_y()[0]+ (30 * x), self.the_dealer.get_x_y()[1] + (30 * x)
+                return  card_gap + self.the_dealer.get_x_y()[0]+ (pixel_move * x), self.the_dealer.get_x_y()[1] + (pixel_move * x)
         else:
             return (0, 0)
 
@@ -229,7 +231,7 @@ class TheGame:
     # loops through CardImage().draw_card to blit card to screen
     def draw_hand_cards(self, hand_list: List[Card]) -> None:
         if hand_list == self.the_dealer.hand and self.need_back:
-            self.draw_back_card(235, 137)
+            self.draw_back_card(*self.the_dealer.get_x_y())
             self.card_images.draw_card(self.screen, hand_list[1])
         else:
             for card in hand_list:
@@ -263,7 +265,7 @@ def main() -> None:
     clock = pygame.time.Clock()
     config.IMG_DIR = path.join(path.dirname(__file__), "images")
 
-    player = Player("Phil", 500)
+    player = Player("Phil", 500, config.WIDTH//2-(config.CARD_WIDTH), config.HEIGHT//14*10)
     game = TheGame(screen, player)
     player.show_cards()
     print(player.get_total())

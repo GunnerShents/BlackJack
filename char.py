@@ -89,7 +89,7 @@ class Player(Character):
     cards should render on the game board.
     """
 
-    def __init__(self, name: str, balance: int) -> None:
+    def __init__(self, name: str, balance: int, start_x:int, start_y:int) -> None:
 
         # Load coin image and transform the size.
         self.hand = []
@@ -99,11 +99,13 @@ class Player(Character):
         self.bet_made = False
         self.total = 0
         self.bust = False
-        self.card_one_x_pos = 236
-        self.card_one_y_pos = 496
-        self.card_two_x_pos = 317
-        self.card_two_y_pos = 496
+        self.player_x = start_x
+        self.player_y = start_y
 
+    def get_x_y(self) -> tuple[int,int]:
+
+        return (self.player_x, self.player_y)
+    
     def get_balance(self) -> int:
         return self.balance
 
@@ -158,10 +160,8 @@ class Dealer(Character):
         self.name = "Dealer"
         self.total = 0
         self.bust = False
-        self.dealer_x = config.WIDTH//2-(config.CARD_WIDTH//2)
-        self.dealer_y = config.HEIGHT//8*2
-        # self.card_two_x_pos = config.WIDTH//2-(config.CARD_WIDTH//2) + 40
-        # self.card_two_y_pos = config.HEIGHT//8*2
+        self.dealer_x = config.WIDTH//2-(config.CARD_WIDTH)
+        self.dealer_y = config.HEIGHT//14*2
         self.not_dealers_turn = True
 
     def get_x_y(self) -> tuple[int,int]:
