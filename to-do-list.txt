@@ -4,7 +4,9 @@ Jobs to do:
 
 Working on:
    
-    1. Create a chip total displayed under the chip stack. 
+    1. Create a chip total displayed under the chip stack.
+    2. Ensure deck image is located form the image dict not seperatly 
+    from the attributes of deck_holder class.
     
 
 Extended project:

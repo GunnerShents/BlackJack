@@ -1,5 +1,5 @@
 from typing import List
-
+import config
 from cardclasses import Card, Deck_holder
 
 
@@ -158,11 +158,15 @@ class Dealer(Character):
         self.name = "Dealer"
         self.total = 0
         self.bust = False
-        self.card_one_x_pos = 235
-        self.card_one_y_pos = 137
-        self.card_two_x_pos = 316
-        self.card_two_y_pos = 137
+        self.dealer_x = config.WIDTH//2-(config.CARD_WIDTH//2)
+        self.dealer_y = config.HEIGHT//8*2
+        # self.card_two_x_pos = config.WIDTH//2-(config.CARD_WIDTH//2) + 40
+        # self.card_two_y_pos = config.HEIGHT//8*2
         self.not_dealers_turn = True
+
+    def get_x_y(self) -> tuple[int,int]:
+
+        return (self.dealer_x, self.dealer_y)
 
     def check_for_stand(self) -> bool:
         total = self.get_total()

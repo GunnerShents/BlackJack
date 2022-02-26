@@ -21,11 +21,13 @@ def generate_images() -> Dict[str, Surface]:
     btn: str
     for btn in btn_dict.keys():
         if btn[:5] == "chip_":
+            #scales the chip_btns
             btn_dict[btn] = pygame.transform.scale(
                 btn_dict[btn],
                 ((config.BUTTON_WIDTH / 5) * 3, (config.BUTTON_HEIGHT / 5) * 3),
             )
         else:
+            #scles game buttons
             btn_dict[btn] = pygame.transform.scale(
                 btn_dict[btn], (config.BUTTON_WIDTH, config.BUTTON_HEIGHT)
             )

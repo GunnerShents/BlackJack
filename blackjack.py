@@ -2,9 +2,7 @@ import random
 import sys
 from os import path
 from typing import List, Tuple
-
 import pygame
-
 import config
 from betting import Betting
 from buttons import Chip_button, Game_button, generate_images
@@ -21,10 +19,10 @@ class TheGame:
         self.screen = screen
         # ------------------------------------------------------------------------------------
         # Load pictures
-        table_img = pygame.image.load(
-            path.join(config.IMG_DIR, "black_jack_table.png")
+        self.table = pygame.image.load(
+            path.join(config.IMG_DIR, "blackjackTable2.png")
         ).convert_alpha()
-        self.table = pygame.transform.scale(table_img, (config.WIDTH, config.HEIGHT))
+        #self.table = pygame.transform.scale(table_img, (config.WIDTH, config.HEIGHT))
         # Creates the 8 decks each deck holds 52 Card(). Totalling 416 cards. The holder is pre shuffled.
         self.main_deck = Deck_holder()
         self.main_deck.create_multi_decks(6)
@@ -72,10 +70,10 @@ class TheGame:
                 return (317 + (30 * x), 496 - (30 * x))
         elif player == self.the_dealer:
             if card_position == 1:
-                return (235, 137)
+                return self.the_dealer.get_x_y()
             else:
                 x = card_position - 2
-                return (317 + (30 * x), 137 + (30 * x))
+                return  self.the_dealer.get_x_y()[0]+ (30 * x), self.the_dealer.get_x_y()[1] + (30 * x)
         else:
             return (0, 0)
 
@@ -191,7 +189,7 @@ class TheGame:
             self.bet_btn.set_active(True)
 
         self.btn_dict = generate_images()
-        btn_x = 10
+        btn_x = 135
         btn_y = 590
         numbers = [5, 10, 20, 50, 100]
         for num in numbers:
@@ -212,7 +210,7 @@ class TheGame:
 
     def draw_all_graphics(self) -> None:
         self.screen.blit(self.table, (0, 0))
-        self.main_deck.draw_deck(self.screen, (105, 270))
+        self.main_deck.draw_deck(self.screen)
         # drawing the betting chips
         self.player_bet.draw_total_bet(self.screen)
         # drawing the betting chips
@@ -285,7 +283,7 @@ def main() -> None:
             if event.type == pygame.QUIT:
                 running = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                # print (pygame.mouse.get_pos())
+                print (pygame.mouse.get_pos())
                 if pygame.mouse.get_pressed() == (1, 0, 0):
                     game.event_handler_on_click()
                 if pygame.mouse.get_pressed() == (0, 0, 1):
