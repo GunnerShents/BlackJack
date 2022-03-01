@@ -89,9 +89,10 @@ class Player(Character):
     cards should render on the game board.
     """
 
-    def __init__(self, name: str, balance: int, start_x:int, start_y:int) -> None:
+    def __init__(self, name: str, balance: int, start_x:int, start_y:int, position:int) -> None:
 
         # Load coin image and transform the size.
+        self.position = position
         self.hand = []
         self.name = name
         self.balance = balance
@@ -101,10 +102,24 @@ class Player(Character):
         self.bust = False
         self.player_x = start_x
         self.player_y = start_y
+    
+    def create_start_coords(self, the_off_set:int) -> tuple[int,int]:    
+        #creates game button based off main_player position.
+        off_set = the_off_set
+        if self.get_player_pos() == 2:
+            btn_pos_x, btn_pos_y  = self.get_x_y()[0] - off_set, self.get_x_y()[1] + (off_set*2)
+        else:
+            btn_pos_x, btn_pos_y  = self.get_x_y()[0] - off_set, self.get_x_y()[1] + (off_set//2*5)
+
+        return btn_pos_x, btn_pos_y
+    
+    def get_player_pos(self):
+        
+        return self.position
 
     def get_x_y(self) -> tuple[int,int]:
 
-        return (self.player_x, self.player_y)
+        return self.player_x, self.player_y
     
     def get_balance(self) -> int:
         return self.balance

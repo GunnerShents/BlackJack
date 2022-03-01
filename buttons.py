@@ -1,6 +1,5 @@
 from os import listdir, path
 from typing import Callable, Dict
-
 import pygame
 from pygame.surface import Surface
 

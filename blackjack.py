@@ -8,22 +8,57 @@ from betting import Betting
 from buttons import Chip_button, Game_button, generate_images
 from cardclasses import Card, CardImages, Deck_holder
 from char import Character, Dealer, Player
+from seat import Seat
 
 # random.seed()
 seed = random.randrange(sys.maxsize)
 random.seed()
 
+class MainGame:
+    def __init__(self,screen: pygame.surface.Surface) -> None:
+        
+        self.screen = screen
+        self.table = pygame.image.load(
+            path.join(config.IMG_DIR, "blackjackTable2.png")
+        ).convert_alpha()
+        self.deck_img = Deck_holder()
+        self.seat_list:list[Seat] = []
+        self.games_in_play:list[TheGame] = []
+        for x in range(3):
+            seat = Seat(x+1, self.check_click)
+            self.seat_list.append(seat)
+        
+    def update_graphics_events(self) -> None:
+        self.screen.blit(self.table, (0, 0))
+        self.deck_img.draw_deck(self.screen)
+        if self.check_list_len(self.seat_list):
+            for seat in self.seat_list:
+                seat.draw_seats(self.screen)
+                seat.check_collide_img_change(*pygame.mouse.get_pos())
+
+    def check_list_len(self, list:list[Seat]):
+        
+        return len(list) > 0
+    
+    def check_click(self) -> None:
+        for seat in self.seat_list:
+            if seat.check_collide_click(*pygame.mouse.get_pos()):
+                pos = seat.get_position()
+                print(f"you clicked seat {pos}")
+                self.create_game(seat.x, seat.y, seat.get_position())
+                self.seat_list.remove(seat)
+                
+    def create_game(self,x:int,y:int, pos:int):
+        player = "Phil"
+        balance = 150
+        player = Player(player,int(balance), x, y, pos)
+        game = TheGame(self.screen, player)
+        self.games_in_play.append(game)  
+        
 
 class TheGame:
     def __init__(self, screen: pygame.surface.Surface, main_player: Player) -> None:
         self.screen = screen
-        # ------------------------------------------------------------------------------------
-        # Load pictures
-        self.table = pygame.image.load(
-            path.join(config.IMG_DIR, "blackjackTable2.png")
-        ).convert_alpha()
-        #self.table = pygame.transform.scale(table_img, (config.WIDTH, config.HEIGHT))
-        # Creates the 8 decks each deck holds 52 Card(). Totalling 416 cards. The holder is pre shuffled.
         self.main_deck = Deck_holder()
         self.main_deck.create_multi_decks(6)
         self.main_deck.shuffle_holder()
@@ -129,9 +164,9 @@ class TheGame:
         self.player_bet.reset()
 
     def create_game_buttons(self) -> None:
-
-        BTN_START_X = 100
-        BTN_START_Y = 630
+        #space out butons
+        off_set = 100
+        btn_pos_x, btn_pos_y = self.main_player.create_start_coords(100)
 
         def hit_main_player() -> None:
             self.hit(self.main_player)
@@ -149,8 +184,8 @@ class TheGame:
             player_place_bet,
             self.btn_dict["bet_up"],
             self.btn_dict["bet_down"],
-            BTN_START_X,
-            BTN_START_Y,
+            btn_pos_x,
+            btn_pos_y,
             self.btn_dict["bet_grey"],
         )
         self.btn_imgs.append(self.bet_btn)
@@ -158,8 +193,8 @@ class TheGame:
             self.deal_table,
             self.btn_dict["deal_up"],
             self.btn_dict["deal_down"],
-            BTN_START_X + 100,
-            BTN_START_Y,
+            btn_pos_x + off_set,
+            btn_pos_y,
             self.btn_dict["deal_grey"],
         )
         self.btn_imgs.append(self.deal_btn)
@@ -167,8 +202,8 @@ class TheGame:
             hit_main_player,
             self.btn_dict["hit_up"],
             self.btn_dict["hit_down"],
-            BTN_START_X + 200,
-            BTN_START_Y,
+            btn_pos_x + (off_set*2),
+            btn_pos_y,
             self.btn_dict["hit_grey"],
         )
         self.btn_imgs.append(self.hit_btn)
@@ -176,8 +211,8 @@ class TheGame:
             self.stand,
             self.btn_dict["stand_up"],
             self.btn_dict["stand_down"],
-            BTN_START_X + 300,
-            BTN_START_Y,
+            btn_pos_x + (off_set*3),
+            btn_pos_y,
             self.btn_dict["stand_grey"],
         )
         self.btn_imgs.append(self.stand_btn)
@@ -191,8 +226,7 @@ class TheGame:
             self.bet_btn.set_active(True)
 
         self.btn_dict = generate_images()
-        btn_x = 135
-        btn_y = 590
+        btn_x, btn_y = self.main_player.create_start_coords(80) 
         numbers = [5, 10, 20, 50, 100]
         for num in numbers:
             bet_btn = Chip_button(
@@ -211,8 +245,8 @@ class TheGame:
             self.screen.blit(self.coin_img, (100, 520))
 
     def draw_all_graphics(self) -> None:
-        self.screen.blit(self.table, (0, 0))
-        self.main_deck.draw_deck(self.screen)
+        #self.screen.blit(self.table, (0, 0))
+        #self.main_deck.draw_deck(self.screen)
         # drawing the betting chips
         self.player_bet.draw_total_bet(self.screen)
         # drawing the betting chips
@@ -265,13 +299,16 @@ def main() -> None:
     clock = pygame.time.Clock()
     config.IMG_DIR = path.join(path.dirname(__file__), "images")
 
-    player = Player("Phil", 500, config.WIDTH//2-(config.CARD_WIDTH), config.HEIGHT//14*10)
-    game = TheGame(screen, player)
-    player.show_cards()
-    print(player.get_total())
-    print("")
-    game.the_dealer.show_cards()
-    print(game.the_dealer.get_total())
+    #player = Player("Phil", 500, config.WIDTH//2-(config.CARD_WIDTH), config.HEIGHT//14*10)
+    #game = TheGame(screen, player)
+    #player.show_cards()
+    #print(player.get_total())
+    #print("")
+    #game.the_dealer.show_cards()
+    #print(game.the_dealer.get_total())
+    
+    #Loading the main game
+    main_game = MainGame(screen)
 
     running = True
     # --------------------------------------------------------------------------
@@ -287,14 +324,20 @@ def main() -> None:
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 print (pygame.mouse.get_pos())
                 if pygame.mouse.get_pressed() == (1, 0, 0):
-                    game.event_handler_on_click()
+                    main_game.check_click()
+                    for game in main_game.games_in_play:
+                        game.event_handler_on_click()
                 if pygame.mouse.get_pressed() == (0, 0, 1):
-                    game.event_handler_right_click()
+                    for game in main_game.games_in_play:
+                        game.event_handler_right_click()
             elif event.type == pygame.MOUSEBUTTONUP:
-                game.reset_buttons()
+                for game in main_game.games_in_play:
+                    game.reset_buttons()
 
         screen.fill(config.BLACK)
-        game.draw_all_graphics()
+        main_game.update_graphics_events()
+        for game in main_game.games_in_play:
+            game.draw_all_graphics()
         pygame.display.update()
 
     pygame.quit()
