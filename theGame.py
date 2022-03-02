@@ -6,49 +6,8 @@ from betting import Betting
 from buttons import Chip_button, Game_button, generate_images
 from cardclasses import Card, CardImages, Deck_holder
 from char import Character, Dealer, Player
-from seat import Seat
+from text import Text
 
-
-class MainGame:
-    def __init__(self,screen: pygame.surface.Surface) -> None:
-        
-        self.screen = screen
-        self.table = pygame.image.load(
-            path.join(config.IMG_DIR, "blackjackTable2.png")
-        ).convert_alpha()
-        self.deck_img = Deck_holder()
-        self.seat_list:list[Seat] = []
-        self.games_in_play:list[TheGame] = []
-        for x in range(3):
-            seat = Seat(x+1, self.check_click)
-            self.seat_list.append(seat)
-        
-    def update_graphics_events(self) -> None:
-        self.screen.blit(self.table, (0, 0))
-        self.deck_img.draw_deck(self.screen)
-        if self.check_list_len(self.seat_list):
-            for seat in self.seat_list:
-                seat.draw_seats(self.screen)
-                seat.check_collide_img_change(*pygame.mouse.get_pos())
-
-    def check_list_len(self, list:list[Seat]):
-        
-        return len(list) > 0
-    
-    def check_click(self) -> None:
-        for seat in self.seat_list:
-            if seat.check_collide_click(*pygame.mouse.get_pos()):
-                pos = seat.get_position()
-                print(f"you clicked seat {pos}")
-                self.create_game(seat.x, seat.y, seat.get_position())
-                self.seat_list.remove(seat)
-                
-    def create_game(self,x:int,y:int, pos:int):
-        player = "Phil"
-        balance = 150
-        player = Player(player,int(balance), x, y, pos)
-        game = TheGame(self.screen, player)
-        self.games_in_play.append(game)  
         
 
 class TheGame:
@@ -75,6 +34,8 @@ class TheGame:
         self.frame = 0
         # Betting functionality
         self.player_bet = Betting()
+        #text rendering
+        self.text = Text()
 
     # deal one card to each player in the self.total_player list
     def deal_table(self) -> None:
@@ -236,8 +197,6 @@ class TheGame:
             btn_x += 70
 
     def draw_all_graphics(self) -> None:
-        #self.screen.blit(self.table, (0, 0))
-        #self.main_deck.draw_deck(self.screen)
         # drawing the betting chips
         self.player_bet.draw_total_bet(self.screen, self.main_player.get_x_y(), self.main_player.get_player_pos())
         # drawing the betting chips
@@ -248,6 +207,12 @@ class TheGame:
             gbtn.draw_button(self.screen)
         self.draw_hand_cards(self.main_player.hand)
         self.draw_hand_cards(self.the_dealer.hand)
+        #draw balance
+        self.text.drawText(self.screen,
+                           str(self.main_player.get_balance()),
+                           34,
+                           self.text.player_coords(self.main_player.get_player_pos()),
+                           config.WHITE)
 
     def draw_back_card(self, x: int, y: int) -> None:
         CardImages().draw_card_back(x, y, self.screen)

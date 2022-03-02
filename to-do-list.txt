@@ -4,9 +4,11 @@ Jobs to do:
 
 Working on:
    
-    1. Create a timer for the top left of the screen. 
-    2. Create a chip total displayed under the chip stack.
+    1. Create a chip total displayed under the chip stack. 
+       Have the balance update as you lock in the bet.
+    2. Create a timer for the top left of the screen.    
     3. Ensure the game runs, with multiple players.
+    4. Create a way to show whos turn it is. Maybe a graphic??????
     3. Ensure deck image is located form the image dict not seperatly 
     from the attributes of deck_holder class.
     4. Super() inheritance on the player and the dealer class.

@@ -4,16 +4,57 @@ from os import path
 #from typing import List, Tuple
 import pygame
 import config
-from theGame import MainGame
+from theGame import TheGame
 #from betting import Betting
 #from buttons import Chip_button, Game_button, generate_images
-#from cardclasses import Card, CardImages, Deck_holder
-#from char import Character, Dealer, Player
-#from seat import Seat
+from cardclasses import Deck_holder
+from char import Player
+from seat import Seat
 # random.seed()
 
 seed = random.randrange(sys.maxsize)
 random.seed()
+
+class MainGame:
+    def __init__(self,screen: pygame.surface.Surface) -> None:
+        
+        self.screen = screen
+        self.table = pygame.image.load(
+            path.join(config.IMG_DIR, "blackjackTable2.png")
+        ).convert_alpha()
+        self.deck_img = Deck_holder()
+        self.seat_list:list[Seat] = []
+        self.games_in_play:list[TheGame] = []
+        for x in range(3):
+            seat = Seat(x+1, self.check_click)
+            self.seat_list.append(seat)
+        
+    def update_graphics_events(self) -> None:
+        self.screen.blit(self.table, (0, 0))
+        self.deck_img.draw_deck(self.screen)
+        if self.check_list_len(self.seat_list):
+            for seat in self.seat_list:
+                seat.draw_seats(self.screen)
+                seat.check_collide_img_change(*pygame.mouse.get_pos())
+
+    def check_list_len(self, list:list[Seat]):
+        
+        return len(list) > 0
+    
+    def check_click(self) -> None:
+        for seat in self.seat_list:
+            if seat.check_collide_click(*pygame.mouse.get_pos()):
+                pos = seat.get_position()
+                print(f"you clicked seat {pos}")
+                self.create_game(seat.x, seat.y, seat.get_position())
+                self.seat_list.remove(seat)
+                
+    def create_game(self,x:int,y:int, pos:int):
+        player = "Phil"
+        balance = 150
+        player = Player(player,int(balance), x, y, pos)
+        game = TheGame(self.screen, player)
+        self.games_in_play.append(game)  
 
 def main() -> None:
     pygame.init()
