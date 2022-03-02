@@ -103,15 +103,16 @@ class Player(Character):
         self.player_x = start_x
         self.player_y = start_y
     
-    def create_start_coords(self, the_off_set:int) -> tuple[int,int]:    
+    def create_start_coords(self, the_offset:int) -> tuple[int,int]:    
         #creates game button based off main_player position.
-        off_set = the_off_set
+        offset = the_offset
         if self.get_player_pos() == 2:
-            btn_pos_x, btn_pos_y  = self.get_x_y()[0] - off_set, self.get_x_y()[1] + (off_set*2)
+            btn_pos_x, btn_pos_y  = self.get_x_y()[0] - offset, self.get_x_y()[1] + (offset*2)
         else:
-            btn_pos_x, btn_pos_y  = self.get_x_y()[0] - off_set, self.get_x_y()[1] + (off_set//2*5)
+            btn_pos_x, btn_pos_y  = self.get_x_y()[0] - offset, self.get_x_y()[1] + (offset//2*5)
 
         return btn_pos_x, btn_pos_y
+
     
     def get_player_pos(self):
         

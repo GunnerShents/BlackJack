@@ -43,15 +43,25 @@ class Betting:
         self.total = 0
         self.bets_placed = []
 
-    def draw_total_bet(self, area: Surface) -> None:
+    def draw_total_bet(self, area: Surface, player_pos:tuple[int,int], player_seat:int) -> None:
         if len(self.bets_placed) > 0:
-            chip_x = 100
-            chip_y = 550
+            chip_x, chip_y = self.get_bet_chip_coords(player_seat, player_pos,)
             for chip in self.bets_placed:
-                chip.x = chip_x
+                #player x, y is corrected to render infront of chip button
+                #graphics.
+                chip.x = chip_x 
                 chip.y = chip_y
                 chip.draw_chip(area)
                 chip_y -= 4
+
+    def get_bet_chip_coords(self, player_pos:int, player_coords:tuple[int,int]) -> tuple[int,int]:
+        x, y = player_coords
+        x += 60 
+        if player_pos == 2:
+            y += 120
+        else:
+            y += 160
+        return x, y       
 
     def get_total(self) -> int:
         return self.total
