@@ -6,7 +6,8 @@ from betting import Betting
 from buttons import Chip_button, Game_button, generate_images
 from cardclasses import Card, CardImages, Deck_holder
 from char import Character, Dealer, Player
-from text import Text
+from render import Render
+
 
         
 
@@ -34,8 +35,9 @@ class TheGame:
         self.frame = 0
         # Betting functionality
         self.player_bet = Betting()
+        self.bet_placed = False
         #text rendering
-        self.text = Text()
+        self.text = Render()
 
     # deal one card to each player in the self.total_player list
     def deal_table(self) -> None:
@@ -135,6 +137,8 @@ class TheGame:
             self.reset_hand()
             for btn in self.chip_btn_images:
                 btn.set_active(False)
+            #game action
+            self.bet_placed = True
 
         self.bet_btn = Game_button(
             player_place_bet,

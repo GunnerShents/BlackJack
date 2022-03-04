@@ -2,7 +2,7 @@ import pygame
 #from char import Player
 
 
-class Text:
+class Render:
     
     def __init__(self):
         
@@ -23,7 +23,11 @@ class Text:
         surf.blit(text_surface, text_rect)
         
     def player_coords(self, pos:int) -> tuple[int,int]:
-         return self.balance_pos[pos]
+        return self.balance_pos[pos]
+    
+        
+        
+        
      
     
         
