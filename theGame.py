@@ -9,8 +9,6 @@ from char import Character, Dealer, Player
 from render import Render
 
 
-        
-
 class TheGame:
     def __init__(self, screen: pygame.surface.Surface, main_player: Player) -> None:
         self.screen = screen
@@ -36,7 +34,7 @@ class TheGame:
         # Betting functionality
         self.player_bet = Betting()
         self.bet_placed = False
-        #text rendering
+        # text rendering
         self.text = Render()
 
     # deal one card to each player in the self.total_player list
@@ -62,13 +60,17 @@ class TheGame:
                 return self.main_player.get_x_y()
             else:
                 x = card_position - 2
-                return card_gap + self.main_player.get_x_y()[0]+(pixel_move * x), self.main_player.get_x_y()[1] - (pixel_move * x)
+                return card_gap + self.main_player.get_x_y()[0] + (
+                    pixel_move * x
+                ), self.main_player.get_x_y()[1] - (pixel_move * x)
         elif player == self.the_dealer:
             if card_position == 1:
                 return self.the_dealer.get_x_y()
             else:
                 x = card_position - 2
-                return  card_gap + self.the_dealer.get_x_y()[0]+ (pixel_move * x), self.the_dealer.get_x_y()[1] + (pixel_move * x)
+                return card_gap + self.the_dealer.get_x_y()[0] + (
+                    pixel_move * x
+                ), self.the_dealer.get_x_y()[1] + (pixel_move * x)
         else:
             return (0, 0)
 
@@ -122,7 +124,7 @@ class TheGame:
         self.player_bet.reset()
 
     def create_game_buttons(self) -> None:
-        #space out butons
+        # space out butons
         off_set = 100
         btn_pos_x, btn_pos_y = self.main_player.create_start_coords(100)
 
@@ -137,7 +139,7 @@ class TheGame:
             self.reset_hand()
             for btn in self.chip_btn_images:
                 btn.set_active(False)
-            #game action
+            # game action bet placed
             self.bet_placed = True
 
         self.bet_btn = Game_button(
@@ -162,7 +164,7 @@ class TheGame:
             hit_main_player,
             self.btn_dict["hit_up"],
             self.btn_dict["hit_down"],
-            btn_pos_x + (off_set*2),
+            btn_pos_x + (off_set * 2),
             btn_pos_y,
             self.btn_dict["hit_grey"],
         )
@@ -171,7 +173,7 @@ class TheGame:
             self.stand,
             self.btn_dict["stand_up"],
             self.btn_dict["stand_down"],
-            btn_pos_x + (off_set*3),
+            btn_pos_x + (off_set * 3),
             btn_pos_y,
             self.btn_dict["stand_grey"],
         )
@@ -186,7 +188,7 @@ class TheGame:
             self.bet_btn.set_active(True)
 
         self.btn_dict = generate_images()
-        btn_x, btn_y = self.main_player.create_start_coords(80) 
+        btn_x, btn_y = self.main_player.create_start_coords(80)
         numbers = [5, 10, 20, 50, 100]
         for num in numbers:
             bet_btn = Chip_button(
@@ -202,7 +204,9 @@ class TheGame:
 
     def draw_all_graphics(self) -> None:
         # drawing the betting chips
-        self.player_bet.draw_total_bet(self.screen, self.main_player.get_x_y(), self.main_player.get_player_pos())
+        self.player_bet.draw_total_bet(
+            self.screen, self.main_player.get_x_y(), self.main_player.get_player_pos()
+        )
         # drawing the betting chips
         for cbtn in self.chip_btn_images:
             cbtn.draw_button(self.screen)
@@ -211,12 +215,14 @@ class TheGame:
             gbtn.draw_button(self.screen)
         self.draw_hand_cards(self.main_player.hand)
         self.draw_hand_cards(self.the_dealer.hand)
-        #draw balance
-        self.text.drawText(self.screen,
-                           str(self.main_player.get_balance()),
-                           34,
-                           self.text.player_coords(self.main_player.get_player_pos()),
-                           config.WHITE)
+        # draw balance
+        self.text.drawText(
+            self.screen,
+            str(self.main_player.get_balance()),
+            34,
+            self.text.player_coords(self.main_player.get_player_pos()),
+            config.WHITE,
+        )
 
     def draw_back_card(self, x: int, y: int) -> None:
         CardImages().draw_card_back(x, y, self.screen)
