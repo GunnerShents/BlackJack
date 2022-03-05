@@ -10,16 +10,22 @@ from render import Render
 
 
 class TheGame:
-    def __init__(self, screen: pygame.surface.Surface, main_player: Player) -> None:
+    def __init__(
+        self,
+        screen: pygame.surface.Surface,
+        main_player: Player,
+        main_deck: Deck_holder,
+        the_dealer: Dealer,
+    ) -> None:
         self.screen = screen
-        self.main_deck = Deck_holder()
-        self.main_deck.create_multi_decks(6)
-        self.main_deck.shuffle_holder()
+        self.the_deck = main_deck
+        # self.main_deck.create_multi_decks(6)
+        # self.main_deck.shuffle_holder()
         self.starting_cards = 2
         # player attributes
         self.main_player = main_player
         # dealer attributes
-        self.the_dealer = Dealer()
+        self.the_dealer = the_dealer
         # images and button attributes
         self.btn_imgs: List[Game_button] = []
         self.chip_btn_images: List[Chip_button] = []
@@ -83,7 +89,7 @@ class TheGame:
         """Hit the given person."""  # crypto docstring
         if not person.bust:
             x, y = self.get_card_coords(len(person.hand) + 1, person)
-            person.hit(self.main_deck, x, y)
+            person.hit(self.the_deck, x, y)
 
     def stand(self) -> None:
 

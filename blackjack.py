@@ -5,7 +5,7 @@ import pygame
 import config
 from theGame import TheGame
 from cardclasses import Deck_holder
-from char import Player
+from char import Player, Dealer
 from seat import Seat
 from render import Render
 
@@ -15,7 +15,13 @@ random.seed()
 
 class MainGame:
     def __init__(self, screen: pygame.surface.Surface) -> None:
-
+        # Prepares the game, Deck, Dealer
+        self.dealer = Dealer()
+        self.main_deck = Deck_holder()
+        self.main_deck.create_multi_decks(6)
+        self.main_deck.shuffle_holder()
+        self.starting_cards = 2
+        # --------------------------------
         self.screen = screen
         self.table = pygame.image.load(
             path.join(config.IMG_DIR, "blackjackTable2.png")
@@ -30,20 +36,31 @@ class MainGame:
         self.the_clock = Render()
         self.a_bet_placed = False
         self.start_clock = False
-        self.in_play: set[int] = set()
+        self.seats_in_play: set[int] = set()
 
-    # player presses bet button.
-    # start the 30 second clock.
+    def deal_to_table(self):
+        """
+        Checks which players have bet and deals a round of cards out top all
+        players and then the daeler twice.
+        """
+        for game in self.games_in_play:
+            if game.main_player.get_bet_made():
+                game.hit(game.main_player)
+
+    def check_whos_in_play(self):
+        pass
 
     def bet_placed(self) -> None:
         """
         checks what players have placed a bet
         """
+        print(self.a_bet_placed)
         for game in self.games_in_play:
             if game.bet_placed:
-                # adds to set the table position
-                # self.in_play.add(game.main_player.get_player_pos())
                 self.a_bet_placed = True
+                if self.players_at_table() > 1:
+                    pass
+                break
             else:
                 self.a_bet_placed = False
 
@@ -56,24 +73,27 @@ class MainGame:
 
     def run_clock(self) -> None:
         """
-        checks frame and
+        Checks 30 seconds have not passed. Updates the frames and
+        renders the changeable clock to the game board.
         """
         if self.get_second() < 30:
             self.frame += 1
-            self.clock()
+            self.draw_clock()
             print(f"{self.frame} - {self.get_second()}")
 
-    def players_at_table(self) -> None:
+    def players_at_table(self) -> int:
         """
-        checks if players are wanting to play
+        @return number of players at the table during the time a bet
+        was locked in.
         """
-        pass
+        return len(self.games_in_play)
 
     def get_second(self) -> int:
         second = self.frame // config.FPS
         return second
 
-    def clock(self) -> None:
+    def draw_clock(self) -> None:
+
         self.the_clock.drawText(
             surf=self.screen,
             text=str(self.get_second()),
@@ -87,10 +107,13 @@ class MainGame:
 
     def reset_clock(self) -> None:
         self.frame = 0
+        self.set_clock(False)
 
     def update_graphics_events(self) -> None:
         """
-        function run in the game loop
+        Draws the table, card_deck, saet images and checks the colide
+        function on the seat image.
+        Run function in the main game body
         """
         self.screen.blit(self.table, (0, 0))
         self.deck_img.draw_deck(self.screen)
@@ -119,7 +142,9 @@ class MainGame:
         player = "Phil"
         balance = 150
         player = Player(player, int(balance), x, y, pos)
-        game = TheGame(self.screen, player)
+        game = TheGame(
+            screen=self.screen, main_player=player, main_deck=self.main_deck, the_dealer=self.dealer
+        )
         self.games_in_play.append(game)
 
     def runs_game_play(self):

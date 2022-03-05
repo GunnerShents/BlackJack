@@ -89,7 +89,7 @@ class Player(Character):
     cards should render on the game board.
     """
 
-    def __init__(self, name: str, balance: int, start_x:int, start_y:int, position:int) -> None:
+    def __init__(self, name: str, balance: int, start_x: int, start_y: int, position: int) -> None:
 
         # Load coin image and transform the size.
         self.position = position
@@ -102,26 +102,28 @@ class Player(Character):
         self.bust = False
         self.player_x = start_x
         self.player_y = start_y
-    
-    def create_start_coords(self, the_offset:int) -> tuple[int,int]:    
-        #creates game button based off main_player position.
+
+    def get_bet_made(self) -> bool:
+        return self.bet_made
+
+    def create_start_coords(self, the_offset: int) -> tuple[int, int]:
+        # creates game button based off main_player position.
         offset = the_offset
         if self.get_player_pos() == 2:
-            btn_pos_x, btn_pos_y  = self.get_x_y()[0] - offset, self.get_x_y()[1] + (offset*2)
+            btn_pos_x, btn_pos_y = self.get_x_y()[0] - offset, self.get_x_y()[1] + (offset * 2)
         else:
-            btn_pos_x, btn_pos_y  = self.get_x_y()[0] - offset, self.get_x_y()[1] + (offset//2*5)
+            btn_pos_x, btn_pos_y = self.get_x_y()[0] - offset, self.get_x_y()[1] + (offset // 2 * 5)
 
         return btn_pos_x, btn_pos_y
 
-    
     def get_player_pos(self):
-        
+
         return self.position
 
-    def get_x_y(self) -> tuple[int,int]:
+    def get_x_y(self) -> tuple[int, int]:
 
         return self.player_x, self.player_y
-    
+
     def get_balance(self) -> int:
         return self.balance
 
@@ -176,11 +178,11 @@ class Dealer(Character):
         self.name = "Dealer"
         self.total = 0
         self.bust = False
-        self.dealer_x = config.WIDTH//2-(config.CARD_WIDTH)
-        self.dealer_y = config.HEIGHT//14*2
+        self.dealer_x = config.WIDTH // 2 - (config.CARD_WIDTH)
+        self.dealer_y = config.HEIGHT // 14 * 2
         self.not_dealers_turn = True
 
-    def get_x_y(self) -> tuple[int,int]:
+    def get_x_y(self) -> tuple[int, int]:
 
         return (self.dealer_x, self.dealer_y)
 
