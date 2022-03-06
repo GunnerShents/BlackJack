@@ -6,7 +6,7 @@ from betting import Betting
 from buttons import Chip_button, Game_button, generate_images
 from cardclasses import Card, CardImages, Deck_holder
 from char import Character, Dealer, Player
-from render import Render
+from render import Text
 
 
 class TheGame:
@@ -41,7 +41,7 @@ class TheGame:
         self.player_bet = Betting()
         self.bet_placed = False
         # text rendering
-        self.text = Render()
+        self.text = Text()
 
     # deal one card to each player in the self.total_player list
     def deal_table(self) -> None:
@@ -49,11 +49,11 @@ class TheGame:
         self.need_back = True
         print(self.main_player.bet)
         self.hit(self.main_player)
-        self.hit(self.the_dealer)
+        # self.hit(self.the_dealer)
         self.hit(self.main_player)
-        self.hit(self.the_dealer)
+        # self.hit(self.the_dealer)
         print(f"the player has {self.main_player.get_total()}")
-        print(f"the dealer has {self.the_dealer.get_total()}")
+        # print(f"the dealer has {self.the_dealer.get_total()}")
         self.deal_btn.set_active(False)
         self.stand_btn.set_active(True)
         self.hit_btn.set_active(True)
@@ -83,7 +83,7 @@ class TheGame:
     def reset_hand(self) -> None:
 
         self.main_player.reset()
-        self.the_dealer.reset()
+        # self.the_dealer.reset()
 
     def hit(self, person: Character) -> None:
         """Hit the given person."""  # crypto docstring
@@ -220,7 +220,7 @@ class TheGame:
         for gbtn in self.btn_imgs:
             gbtn.draw_button(self.screen)
         self.draw_hand_cards(self.main_player.hand)
-        self.draw_hand_cards(self.the_dealer.hand)
+        # self.draw_hand_cards(self.the_dealer.hand)
         # draw balance
         self.text.drawText(
             self.screen,
