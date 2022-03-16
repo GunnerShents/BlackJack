@@ -29,29 +29,29 @@ class MainGame:
         self.deck_img = Deck_holder()
         self.seat_list: list[Seat] = []
         self.games_in_play: list[TheGame] = []
+        self.hand_in_play = []
         for x in range(3):
             seat = Seat(x + 1, self.check_click)
             self.seat_list.append(seat)
         self.frame = 0
         self.the_clock = Text()
         self.bet_timer = 10
-        self.a_bet_placed = False
-        self.start_clock = False
         self.seats_in_play: set[int] = set()
 
     def deal_to_table(self):
         """
         Checks which players have bet and deals two cards to each player in turn.
+        Resets the clock after the cards are dealt.
         """
         if self.check_whos_in_play():
-            print("deal to table")
             for game in self.games_in_play:
                 if game.main_player.get_bet_made() and len(game.main_player.hand) < 2:
                     game.hit(game.main_player)
-
+            
+            
     def check_whos_in_play(self) -> bool:
         """
-        if table is not empty. Checks if all players have made their
+        if table is not empty. Returns true if all players have made their
         bet or if the timer has reached the cut off.
         """
         if self.players_at_table() > 0:
@@ -63,22 +63,20 @@ class MainGame:
             return all_bets == len(self.games_in_play) or self.get_second() == self.bet_timer
         return False
 
-    def bet_placed(self) -> None:
+    def bet_placed(self) -> bool:
         """
         If any of the players at the table have placed a bet a flag is triggered
         """
-        for game in self.games_in_play:
-            if game.bet_placed:
-                self.a_bet_placed = True
-                break
-            else:
-                self.a_bet_placed = False
+        if any(game.bet_placed for game in self.games_in_play):
+            return True
+        else:
+            return False
 
     def start_the_clock(self) -> None:
         """
         if any player has placed a bet start the clock
         """
-        if self.a_bet_placed:
+        if self.bet_placed():
             self.run_clock()
 
     def run_clock(self) -> None:
@@ -110,12 +108,8 @@ class MainGame:
             colour=config.WHITE,
         )
 
-    def set_clock(self, set_flag: bool) -> None:
-        self.start_clock = set_flag
-
     def reset_clock(self) -> None:
         self.frame = 0
-        self.set_clock(False)
 
     def update_graphics_events(self) -> None:
         """
@@ -158,7 +152,7 @@ class MainGame:
         Handles the bets paced, launches the clock, deals to the
         players.
         """
-        self.bet_placed()
+        # self.bet_placed()
         self.start_the_clock()
         self.deal_to_table()
 
