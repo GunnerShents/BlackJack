@@ -3,7 +3,7 @@ import sys
 from os import path
 import pygame
 import config
-from theGame import TheGame
+from playerInSeat import PlayerInSeat
 from cardclasses import Deck_holder
 from char import Player, Dealer
 from seat import Seat
@@ -28,7 +28,7 @@ class MainGame:
         ).convert_alpha()
         self.deck_img = Deck_holder()
         self.seat_list: list[Seat] = []
-        self.games_in_play: list[TheGame] = []
+        self.games_in_play: list[PlayerInSeat] = []
         self.hand_in_play = []
         for x in range(3):
             seat = Seat(x + 1, self.check_click)
@@ -38,23 +38,28 @@ class MainGame:
         self.bet_timer = 10
         self.seats_in_play: set[int] = set()
 
+    # --------------------------------------------------
     def deal_to_table(self):
         """
         Checks which players have bet and deals two cards to each player in turn.
         Resets the clock after the cards are dealt.
         """
-        if self.check_whos_in_play():
+        if self.betting_finished():
             for game in self.games_in_play:
                 if game.main_player.get_bet_made() and len(game.main_player.hand) < 2:
                     game.hit(game.main_player)
-            
-            
-    def check_whos_in_play(self) -> bool:
+            # if the dealer has < 2 cards in the hand.
+            #   deal one card
+
+        # Deal to the players that have made a bet.
+        # Once one card has been dealt, we deal to the dealer.
+
+    def betting_finished(self) -> bool:
         """
         if table is not empty. Returns true if all players have made their
         bet or if the timer has reached the cut off.
         """
-        if self.players_at_table() > 0:
+        if len(self.games_in_play) > 0:
             all_bets = 0
             for game in self.games_in_play:
                 if game.main_player.get_bet_made():
@@ -63,20 +68,13 @@ class MainGame:
             return all_bets == len(self.games_in_play) or self.get_second() == self.bet_timer
         return False
 
-    def bet_placed(self) -> bool:
-        """
-        If any of the players at the table have placed a bet a flag is triggered
-        """
-        if any(game.bet_placed for game in self.games_in_play):
-            return True
-        else:
-            return False
-
+    # -----------------------------------------------------
+    # Clock methods
     def start_the_clock(self) -> None:
         """
         if any player has placed a bet start the clock
         """
-        if self.bet_placed():
+        if any(game.bet_placed for game in self.games_in_play):
             self.run_clock()
 
     def run_clock(self) -> None:
@@ -87,13 +85,6 @@ class MainGame:
         if self.get_second() < self.bet_timer:
             self.frame += 1
             self.draw_clock()
-
-    def players_at_table(self) -> int:
-        """
-        @return number of players at the table during the time a bet
-        was locked in.
-        """
-        return len(self.games_in_play)
 
     def get_second(self) -> int:
         second = self.frame // config.FPS
@@ -110,6 +101,9 @@ class MainGame:
 
     def reset_clock(self) -> None:
         self.frame = 0
+
+    # ------------------------------------------------------
+    # Game methods
 
     def update_graphics_events(self) -> None:
         """
@@ -141,7 +135,7 @@ class MainGame:
         player = "Phil"
         balance = 150
         player = Player(player, int(balance), x, y, pos)
-        game = TheGame(
+        game = PlayerInSeat(
             screen=self.screen, main_player=player, main_deck=self.main_deck, the_dealer=self.dealer
         )
         self.games_in_play.append(game)
@@ -166,7 +160,7 @@ def main() -> None:
     config.IMG_DIR = path.join(path.dirname(__file__), "images")
 
     # player = Player("Phil", 500, config.WIDTH//2-(config.CARD_WIDTH), config.HEIGHT//14*10)
-    # game = TheGame(screen, player)
+    # game = PlayerInSeat(screen, player)
     # player.show_cards()
     # print(player.get_total())
     # print("")

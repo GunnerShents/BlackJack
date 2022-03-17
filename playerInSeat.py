@@ -6,10 +6,10 @@ from betting import Betting
 from buttons import Chip_button, Game_button, generate_images
 from cardclasses import Card, CardImages, Deck_holder
 from char import Character, Dealer, Player
-from render import Text
+from render import Text, CardPlays
 
 
-class TheGame:
+class PlayerInSeat:
     def __init__(
         self,
         screen: pygame.surface.Surface,
@@ -19,8 +19,6 @@ class TheGame:
     ) -> None:
         self.screen = screen
         self.the_deck = main_deck
-        # self.main_deck.create_multi_decks(6)
-        # self.main_deck.shuffle_holder()
         self.starting_cards = 2
         # player attributes
         self.main_player = main_player
@@ -38,6 +36,7 @@ class TheGame:
         self.need_back = False
         self.frame = 0
         # Betting functionality
+        self.card_plays = CardPlays()
         self.player_bet = Betting()
         self.bet_placed = False
         # text rendering
@@ -59,6 +58,10 @@ class TheGame:
         self.hit_btn.set_active(True)
 
     def get_card_coords(self, card_position: int, player: Character) -> Tuple[int, int]:
+        """
+        Calculates the x, y pixel positions for the card based on its
+        table position.
+        """
         pixel_move = 30
         card_gap = 60
         if player == self.main_player:
@@ -79,11 +82,6 @@ class TheGame:
                 ), self.the_dealer.get_x_y()[1] + (pixel_move * x)
         else:
             return (0, 0)
-
-    def reset_hand(self) -> None:
-
-        self.main_player.reset()
-        # self.the_dealer.reset()
 
     def hit(self, person: Character) -> None:
         """Hit the given person."""  # crypto docstring
@@ -207,6 +205,10 @@ class TheGame:
             )
             self.chip_btn_images.append(bet_btn)
             btn_x += 70
+
+    def reset_hand(self) -> None:
+        self.main_player.reset()
+        # self.the_dealer.reset()
 
     def draw_all_graphics(self) -> None:
         # drawing the betting chips

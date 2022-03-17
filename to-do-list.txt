@@ -4,12 +4,12 @@ Jobs to do:
 
 Working on:
 
-    . add the dealer into the deal hand.
+    . Deal to the dealer while we deal to the players.
     . control the hand, allow the players to play in turn. 
     . Reset/stop the clock once the hand is delt. 
     . Create a way to show whos turn it is. Maybe a graphic??????
     . Ensure deck image is located form the image dict not seperatly 
-    from the attributes of deck_holder class.
+      from the attributes of deck_holder class.
     . Super() inheritance on the player and the dealer class.
     . Look at creating all rendering from one class ^^
     
