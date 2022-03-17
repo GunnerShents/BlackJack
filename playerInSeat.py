@@ -1,11 +1,11 @@
 from os import path
-from typing import List, Tuple
+from typing import List
 import pygame
 import config
 from betting import Betting
 from buttons import Chip_button, Game_button, generate_images
-from cardclasses import Card, CardImages, Deck_holder
-from char import Character, Dealer, Player
+from cardclasses import CardImages, Deck_holder
+from char import Dealer, Player
 from render import Text, CardPlays
 
 
@@ -47,47 +47,15 @@ class PlayerInSeat:
 
         self.need_back = True
         print(self.main_player.bet)
-        self.hit(self.main_player)
-        # self.hit(self.the_dealer)
-        self.hit(self.main_player)
-        # self.hit(self.the_dealer)
+        self.card_plays.hit(self.main_player, self.the_deck)
+        # self.card_plays(self.the_dealer)
+        self.card_plays.hit(self.main_player, self.the_deck)
+        # self.card_plays(self.the_dealer)
         print(f"the player has {self.main_player.get_total()}")
         # print(f"the dealer has {self.the_dealer.get_total()}")
         self.deal_btn.set_active(False)
         self.stand_btn.set_active(True)
-        self.hit_btn.set_active(True)
-
-    def get_card_coords(self, card_position: int, player: Character) -> Tuple[int, int]:
-        """
-        Calculates the x, y pixel positions for the card based on its
-        table position.
-        """
-        pixel_move = 30
-        card_gap = 60
-        if player == self.main_player:
-            if card_position == 1:
-                return self.main_player.get_x_y()
-            else:
-                x = card_position - 2
-                return card_gap + self.main_player.get_x_y()[0] + (
-                    pixel_move * x
-                ), self.main_player.get_x_y()[1] - (pixel_move * x)
-        elif player == self.the_dealer:
-            if card_position == 1:
-                return self.the_dealer.get_x_y()
-            else:
-                x = card_position - 2
-                return card_gap + self.the_dealer.get_x_y()[0] + (
-                    pixel_move * x
-                ), self.the_dealer.get_x_y()[1] + (pixel_move * x)
-        else:
-            return (0, 0)
-
-    def hit(self, person: Character) -> None:
-        """Hit the given person."""  # crypto docstring
-        if not person.bust:
-            x, y = self.get_card_coords(len(person.hand) + 1, person)
-            person.hit(self.the_deck, x, y)
+        self.card_plays_btn.set_active(True)
 
     def stand(self) -> None:
 
@@ -99,12 +67,12 @@ class PlayerInSeat:
             self.check_result()
         else:
             while not self.the_dealer.bust and not self.the_dealer.check_for_stand():
-                self.hit(self.the_dealer)
+                self.card_plays.hit(self.the_dealer, self.the_deck)
                 self.the_dealer.show_cards()
             self.check_result()
         self.deal_btn.set_active(False)
         self.stand_btn.set_active(False)
-        self.hit_btn.set_active(False)
+        self.card_plays_btn.set_active(False)
         self.bet_btn.set_active(False)
         for btn in self.chip_btn_images:
             btn.set_active(True)
@@ -133,7 +101,7 @@ class PlayerInSeat:
         btn_pos_x, btn_pos_y = self.main_player.create_start_coords(100)
 
         def hit_main_player() -> None:
-            self.hit(self.main_player)
+            self.card_plays.hit(self.main_player, self.the_deck)
 
         def player_place_bet() -> None:
             self.main_player.set_bet(self.player_bet.get_total())
@@ -164,7 +132,7 @@ class PlayerInSeat:
             self.btn_dict["deal_grey"],
         )
         self.btn_imgs.append(self.deal_btn)
-        self.hit_btn = Game_button(
+        self.card_plays_btn = Game_button(
             hit_main_player,
             self.btn_dict["hit_up"],
             self.btn_dict["hit_down"],
@@ -172,7 +140,7 @@ class PlayerInSeat:
             btn_pos_y,
             self.btn_dict["hit_grey"],
         )
-        self.btn_imgs.append(self.hit_btn)
+        self.btn_imgs.append(self.card_plays_btn)
         self.stand_btn = Game_button(
             self.stand,
             self.btn_dict["stand_up"],
@@ -221,7 +189,7 @@ class PlayerInSeat:
         # drawing the game buttons
         for gbtn in self.btn_imgs:
             gbtn.draw_button(self.screen)
-        self.draw_hand_cards(self.main_player.hand)
+        self.card_plays.draw_hand_cards(self.main_player.hand, self.screen)
         # self.draw_hand_cards(self.the_dealer.hand)
         # draw balance
         self.text.drawText(
@@ -237,13 +205,13 @@ class PlayerInSeat:
 
     # @param hand_list needs to hold Card() objects
     # loops through CardImage().draw_card to blit card to screen
-    def draw_hand_cards(self, hand_list: List[Card]) -> None:
-        if hand_list == self.the_dealer.hand and self.need_back:
-            self.draw_back_card(*self.the_dealer.get_x_y())
-            self.card_images.draw_card(self.screen, hand_list[1])
-        else:
-            for card in hand_list:
-                self.card_images.draw_card(self.screen, card)
+    # def draw_hand_cards(self, hand_list: List[Card]) -> None:
+    #     if hand_list == self.the_dealer.hand and self.need_back:
+    #         self.draw_back_card(*self.the_dealer.get_x_y())
+    #         self.card_images.draw_card(self.screen, hand_list[1])
+    #     else:
+    #         for card in hand_list:
+    #             self.card_images.draw_card(self.screen, card)
 
     def event_handler_on_click(self) -> None:
         for gbtn in self.btn_imgs:

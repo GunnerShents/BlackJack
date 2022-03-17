@@ -24,8 +24,6 @@ class Seat:
             1: (config.WIDTH // 20 * 2, config.HEIGHT // 10 * 4),
             2: (config.WIDTH // 20 * 8, config.HEIGHT // 10 * 6),
             3: (config.WIDTH // 20 * 14, config.HEIGHT // 10 * 4),
-            # 4 is the dealers position
-            4: (config.WIDTH // 20 * 8, config.HEIGHT // 10 * 2),
         }
         self.seat_img = [
             pygame.image.load(path.join(config.IMG_DIR, "seat1.png")).convert_alpha(),
@@ -60,10 +58,3 @@ class Seat:
 
     def get_position(self):
         return self.position
-
-
-my_dict = {1: (10, 20)}
-
-x = my_dict[1][0]
-for x in range(3):
-    print(x)

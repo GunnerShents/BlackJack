@@ -1,5 +1,5 @@
 import pygame
-from cardclasses import Deck_holder
+from cardclasses import Deck_holder, Card, CardImages
 from char import Player, Dealer, Character
 
 
@@ -64,3 +64,10 @@ class CardPlays:
         if not person.bust:
             x, y = self.get_card_coords(len(person.hand) + 1, person)
             person.hit(deck, x, y)
+
+    def draw_hand_cards(self, hand_list: list[Card], area: pygame.surface.Surface) -> None:
+        """
+        Takes a players hand and displays the cards onto a Pygame surface
+        """
+        for card in hand_list:
+            CardImages().draw_card(area, card)

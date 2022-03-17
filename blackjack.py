@@ -4,10 +4,10 @@ from os import path
 import pygame
 import config
 from playerInSeat import PlayerInSeat
-from cardclasses import Deck_holder
+from cardclasses import Deck_holder, CardImages
 from char import Player, Dealer
 from seat import Seat
-from render import Text
+from render import Text, CardPlays
 
 seed = random.randrange(sys.maxsize)
 random.seed()
@@ -27,6 +27,9 @@ class MainGame:
             path.join(config.IMG_DIR, "blackjackTable2.png")
         ).convert_alpha()
         self.deck_img = Deck_holder()
+        # ---------------------------------
+        # Sets up the game
+        self.card_plays = CardPlays()
         self.seat_list: list[Seat] = []
         self.games_in_play: list[PlayerInSeat] = []
         self.hand_in_play = []
@@ -47,9 +50,11 @@ class MainGame:
         if self.betting_finished():
             for game in self.games_in_play:
                 if game.main_player.get_bet_made() and len(game.main_player.hand) < 2:
-                    game.hit(game.main_player)
+                    game.card_plays.hit(game.main_player, self.main_deck)
             # if the dealer has < 2 cards in the hand.
-            #   deal one card
+            if len(self.dealer.hand) < 2:
+                #   deal one card
+                self.card_plays.hit(self.dealer, self.main_deck)
 
         # Deal to the players that have made a bet.
         # Once one card has been dealt, we deal to the dealer.
@@ -113,6 +118,8 @@ class MainGame:
         """
         self.screen.blit(self.table, (0, 0))
         self.deck_img.draw_deck(self.screen)
+        for card in self.dealer.hand:
+            CardImages().draw_card(self.screen, card)
         if len(self.seat_list) > 0:
             for seat in self.seat_list:
                 seat.draw_seats(self.screen)
@@ -125,8 +132,6 @@ class MainGame:
         """
         for seat in self.seat_list:
             if seat.check_collide_click(*pygame.mouse.get_pos()):
-                # pos = seat.get_position()
-                # print(f"you clicked seat {pos}")
                 self.create_game(seat.x, seat.y, seat.get_position())
                 self.seat_list.remove(seat)
 
