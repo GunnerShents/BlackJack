@@ -189,29 +189,17 @@ class PlayerInSeat:
         # drawing the game buttons
         for gbtn in self.btn_imgs:
             gbtn.draw_button(self.screen)
-        self.card_plays.draw_hand_cards(self.main_player.hand, self.screen)
+        for card in self.main_player.hand:
+            self.card_images.draw_card(self.screen, card)
         # self.draw_hand_cards(self.the_dealer.hand)
         # draw balance
         self.text.drawText(
-            self.screen,
-            str(self.main_player.get_balance()),
-            34,
-            self.text.player_coords(self.main_player.get_player_pos()),
-            config.WHITE,
+            surf=self.screen,
+            text=str(self.main_player.get_balance()),
+            size=34,
+            coords=self.text.player_coords(self.main_player.get_player_pos()),
+            colour=config.WHITE,
         )
-
-    def draw_back_card(self, x: int, y: int) -> None:
-        CardImages().draw_card_back(x, y, self.screen)
-
-    # @param hand_list needs to hold Card() objects
-    # loops through CardImage().draw_card to blit card to screen
-    # def draw_hand_cards(self, hand_list: List[Card]) -> None:
-    #     if hand_list == self.the_dealer.hand and self.need_back:
-    #         self.draw_back_card(*self.the_dealer.get_x_y())
-    #         self.card_images.draw_card(self.screen, hand_list[1])
-    #     else:
-    #         for card in hand_list:
-    #             self.card_images.draw_card(self.screen, card)
 
     def event_handler_on_click(self) -> None:
         for gbtn in self.btn_imgs:

@@ -56,14 +56,18 @@ class CardImages:
     """
 
     def __init__(self) -> None:
-    
+
         # load images
         blank_card = pygame.image.load(
             path.join(config.IMG_DIR, "BJ_blankCard.png")
         ).convert_alpha()
-        self.blank_card_img = pygame.transform.scale(blank_card, (config.CARD_WIDTH, config.CARD_HEIGHT))
+        self.blank_card_img = pygame.transform.scale(
+            blank_card, (config.CARD_WIDTH, config.CARD_HEIGHT)
+        )
         card_back = pygame.image.load(path.join(config.IMG_DIR, "BJ_cardBack.png")).convert_alpha()
-        self.card_back_img = pygame.transform.scale(card_back, (config.CARD_WIDTH, config.CARD_HEIGHT))
+        self.card_back_img = pygame.transform.scale(
+            card_back, (config.CARD_WIDTH, config.CARD_HEIGHT)
+        )
         self.suits: Dict[str, pygame.surface.Surface] = {}
         self.red_numbers: Dict[str, pygame.surface.Surface] = {}
         self.black_numbers: Dict[str, pygame.surface.Surface] = {}
@@ -94,12 +98,20 @@ class CardImages:
                     path.join(num_path, image)
                 ).convert_alpha()
 
-    def draw_card_back(self, x: int, y: int, area: Surface) -> None:
-
-        area.blit(self.card_back_img, (x, y))
+    def draw_card_back(self, area: Surface, card: Card):
+        """
+        Blits the card back onto a Pygame surface, error if card x or
+        card y are None values.
+        """
+        if card.x == None or card.y == None:
+            raise RuntimeError("Card values are not integers")
+        area.blit(self.card_back_img, (card.x, card.y))
 
     def draw_card(self, area: Surface, card: Card) -> None:
-
+        """
+        Takes three images and creates the card. Position is set by the card
+        x & y. The card numbers are coloured the same as the suit.
+        """
         colour_dict: Dict[str, pygame.surface.Surface] = self.red_numbers
         if card.suit == "Spades" or card.suit == "Clubs":
             colour_dict = self.black_numbers
@@ -154,7 +166,7 @@ class Deck_holder:
     def __init__(self) -> None:
 
         self.img_width = config.CARD_WIDTH
-        self.img_height = config.CARD_HEIGHT 
+        self.img_height = config.CARD_HEIGHT
         deck = pygame.image.load(path.join(config.IMG_DIR, "BJ_deck.png")).convert_alpha()
         self.holder: List[Card] = []
         self.deck_img = pygame.transform.scale(deck, (self.img_width, self.img_height))
@@ -190,4 +202,6 @@ class Deck_holder:
 
     def draw_deck(self, area: Surface) -> None:
 
-        area.blit(self.deck_img, (config.WIDTH//2-(self.img_width//2),config.HEIGHT//6*2))
+        area.blit(
+            self.deck_img, (config.WIDTH // 2 - (self.img_width // 2), config.HEIGHT // 6 * 2)
+        )

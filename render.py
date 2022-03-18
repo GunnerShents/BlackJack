@@ -1,13 +1,18 @@
 import pygame
-from cardclasses import Deck_holder, Card, CardImages
+from cardclasses import Deck_holder
 from char import Player, Dealer, Character
+import config
 
 
 class Text:
     def __init__(self):
 
         self.font_name = pygame.font.match_font("californianfb")
-        self.balance_pos = {1: (40, 430), 2: (655, 535), 3: (1050, 430)}
+        self.balance_pos = {
+            1: (config.WIDTH // 20 * 17, config.HEIGHT // 10 * 6),
+            2: (config.WIDTH // 20 * 11, config.HEIGHT // 10 * 7),
+            3: (config.WIDTH // 20 * 5, config.HEIGHT // 10 * 6),
+        }
 
     def drawText(
         self,
@@ -65,9 +70,7 @@ class CardPlays:
             x, y = self.get_card_coords(len(person.hand) + 1, person)
             person.hit(deck, x, y)
 
-    def draw_hand_cards(self, hand_list: list[Card], area: pygame.surface.Surface) -> None:
-        """
-        Takes a players hand and displays the cards onto a Pygame surface
-        """
-        for card in hand_list:
-            CardImages().draw_card(area, card)
+        # if hand_list == self.the_dealer.hand and need_back:
+        #     self.draw_back_card(*self.the_dealer.get_x_y())
+        #     self.card_images.draw_card(self.screen, hand_list[1])
+        # else:

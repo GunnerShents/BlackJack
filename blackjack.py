@@ -17,6 +17,7 @@ class MainGame:
     def __init__(self, screen: pygame.surface.Surface) -> None:
         # Prepares the game, Deck, Dealer
         self.dealer = Dealer()
+        self.players_turn = False
         self.main_deck = Deck_holder()
         self.main_deck.create_multi_decks(6)
         self.main_deck.shuffle_holder()
@@ -29,6 +30,7 @@ class MainGame:
         self.deck_img = Deck_holder()
         # ---------------------------------
         # Sets up the game
+        self.draw_card_images = CardImages()
         self.card_plays = CardPlays()
         self.seat_list: list[Seat] = []
         self.games_in_play: list[PlayerInSeat] = []
@@ -55,6 +57,8 @@ class MainGame:
             if len(self.dealer.hand) < 2:
                 #   deal one card
                 self.card_plays.hit(self.dealer, self.main_deck)
+                if len(self.dealer.hand) == 2:
+                    self.players_turn = True
 
         # Deal to the players that have made a bet.
         # Once one card has been dealt, we deal to the dealer.
@@ -118,8 +122,12 @@ class MainGame:
         """
         self.screen.blit(self.table, (0, 0))
         self.deck_img.draw_deck(self.screen)
-        for card in self.dealer.hand:
-            CardImages().draw_card(self.screen, card)
+        if self.players_turn:
+            self.draw_card_images.draw_card_back(self.screen, self.dealer.hand[0])
+            self.draw_card_images.draw_card(self.screen, self.dealer.hand[1])
+        else:
+            for card in self.dealer.hand:
+                self.draw_card_images.draw_card(self.screen, card)
         if len(self.seat_list) > 0:
             for seat in self.seat_list:
                 seat.draw_seats(self.screen)
@@ -132,6 +140,7 @@ class MainGame:
         """
         for seat in self.seat_list:
             if seat.check_collide_click(*pygame.mouse.get_pos()):
+                print(seat.position)
                 self.create_game(seat.x, seat.y, seat.get_position())
                 self.seat_list.remove(seat)
 
@@ -154,6 +163,8 @@ class MainGame:
         # self.bet_placed()
         self.start_the_clock()
         self.deal_to_table()
+        if self.players_turn:
+            pass
 
 
 def main() -> None:
@@ -163,14 +174,6 @@ def main() -> None:
     pygame.display.set_caption("Black Jack")
     clock = pygame.time.Clock()
     config.IMG_DIR = path.join(path.dirname(__file__), "images")
-
-    # player = Player("Phil", 500, config.WIDTH//2-(config.CARD_WIDTH), config.HEIGHT//14*10)
-    # game = PlayerInSeat(screen, player)
-    # player.show_cards()
-    # print(player.get_total())
-    # print("")
-    # game.the_dealer.show_cards()
-    # print(game.the_dealer.get_total())
 
     # Loading the main game
     main_game = MainGame(screen)
