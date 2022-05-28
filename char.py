@@ -131,6 +131,7 @@ class Player(Character):
     def set_bet(self, amount: int) -> None:
         if not self.bet_made:
             self.bet = amount
+            self.balance -= self.bet
             self.bet_made = True
 
     def get_bet(self) -> int:

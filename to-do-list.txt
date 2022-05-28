@@ -4,13 +4,8 @@ Jobs to do:
 
 Working on:
 
-    . Look at the blit/rendering of the images - refactor.
-    . The first dealer card needs to be face down.
     . control the hand, allow the players to play in turn. 
     . Reset/stop the clock once the hand is delt. 
-    . Create a way to show whos turn it is. Maybe a graphic??????
-    . Ensure deck image is located form the image dict not seperatly 
-      from the attributes of deck_holder class.
     . Super() inheritance on the player and the dealer class.
     . Character class has a hand list and so do the children classes,
       check to see if parent class is enough.

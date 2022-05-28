@@ -34,7 +34,7 @@ class MainGame:
         self.card_plays = CardPlays()
         self.seat_list: list[Seat] = []
         self.games_in_play: list[PlayerInSeat] = []
-        self.hand_in_play = []
+        # self.hand_in_play = []
         for x in range(3):
             seat = Seat(x + 1, self.check_click)
             self.seat_list.append(seat)
@@ -59,9 +59,25 @@ class MainGame:
                 self.card_plays.hit(self.dealer, self.main_deck)
                 if len(self.dealer.hand) == 2:
                     self.players_turn = True
+                    self.set_buttons()
 
-        # Deal to the players that have made a bet.
-        # Once one card has been dealt, we deal to the dealer.
+    def set_buttons(self) -> None:
+        """
+        For players with a placed bet deactivates the deal and bet button.
+        Activates the stand and hit buttons. Players at the table with no bets placed
+        have their betting chips deactivated.
+        """
+        first_player = True
+        for game in self.games_in_play:
+            if game.bet_placed and first_player:
+                game.bet_btn.set_active(False)
+                game.deal_btn.set_active(False)
+                game.stand_btn.set_active(True)
+                game.card_plays_btn.set_active(True)
+                first_player = False
+            else:
+                game.set_all_btns(game.get_game_btns(), False)
+                game.set_all_btns(game.get_chip_btns(), False)
 
     def betting_finished(self) -> bool:
         """
@@ -116,7 +132,7 @@ class MainGame:
 
     def update_graphics_events(self) -> None:
         """
-        Draws the table, card_deck, saet images and checks the colide
+        Draws the table, card_deck, seat images and checks the colide
         function on the seat image.
         Run function in the main game body
         """
@@ -152,15 +168,16 @@ class MainGame:
         game = PlayerInSeat(
             screen=self.screen, main_player=player, main_deck=self.main_deck, the_dealer=self.dealer
         )
+        if self.betting_finished():
+            game.set_all_btns(game.get_chip_btns(), False)
         self.games_in_play.append(game)
 
     def runs_game_play(self):
         """
         This method handles all the game logic for the table.
-        Handles the bets paced, launches the clock, deals to the
+        Handles the bets placed, launches the clock, deals to the
         players.
         """
-        # self.bet_placed()
         self.start_the_clock()
         self.deal_to_table()
         if self.players_turn:

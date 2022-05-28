@@ -1,12 +1,14 @@
 from os import path
-from typing import List
+from typing import List, TypeVar
 import pygame
 import config
 from betting import Betting
-from buttons import Chip_button, Game_button, generate_images
+from buttons import Button, Chip_button, Game_button, generate_images
 from cardclasses import CardImages, Deck_holder
 from char import Dealer, Player
 from render import Text, CardPlays
+
+T = TypeVar("T", bound=Button)
 
 
 class PlayerInSeat:
@@ -25,8 +27,8 @@ class PlayerInSeat:
         # dealer attributes
         self.the_dealer = the_dealer
         # images and button attributes
-        self.btn_imgs: List[Game_button] = []
-        self.chip_btn_images: List[Chip_button] = []
+        self.game_btns: List[Game_button] = []
+        self.chip_btns: List[Chip_button] = []
         self.btn_dict = generate_images()
         coin_img = pygame.image.load(path.join(config.IMG_DIR, "coin.png")).convert_alpha()
         self.coin_img = pygame.transform.scale(coin_img, (config.COIN_X, config.COIN_Y))
@@ -42,20 +44,32 @@ class PlayerInSeat:
         # text rendering
         self.text = Text()
 
-    # deal one card to each player in the self.total_player list
-    def deal_table(self) -> None:
+    def set_all_btns(self, btn_list: list[T], bool: bool):
+        """sets all the chip buttons to the argument"""
+        for btn in btn_list:
+            btn.set_active(bool)
 
-        self.need_back = True
-        print(self.main_player.bet)
-        self.card_plays.hit(self.main_player, self.the_deck)
-        # self.card_plays(self.the_dealer)
-        self.card_plays.hit(self.main_player, self.the_deck)
-        # self.card_plays(self.the_dealer)
-        print(f"the player has {self.main_player.get_total()}")
-        # print(f"the dealer has {self.the_dealer.get_total()}")
-        self.deal_btn.set_active(False)
-        self.stand_btn.set_active(True)
-        self.card_plays_btn.set_active(True)
+    def get_chip_btns(self) -> list[Chip_button]:
+        return self.chip_btns
+
+    def get_game_btns(self) -> list[Game_button]:
+        return self.game_btns
+
+    # # deal one card to each player in the self.total_player list
+    def deal_table(self) -> None:
+        pass
+
+    #     self.need_back = True
+    #     print(self.main_player.bet)
+    #     self.card_plays.hit(self.main_player, self.the_deck)
+    #     # self.card_plays(self.the_dealer)
+    #     self.card_plays.hit(self.main_player, self.the_deck)
+    #     # self.card_plays(self.the_dealer)
+    #     print(f"the player has {self.main_player.get_total()}")
+    #     # print(f"the dealer has {self.the_dealer.get_total()}")
+    #     self.deal_btn.set_active(False)
+    #     self.stand_btn.set_active(True)
+    #     self.card_plays_btn.set_active(True)
 
     def stand(self) -> None:
 
@@ -74,7 +88,7 @@ class PlayerInSeat:
         self.stand_btn.set_active(False)
         self.card_plays_btn.set_active(False)
         self.bet_btn.set_active(False)
-        for btn in self.chip_btn_images:
+        for btn in self.chip_btns:
             btn.set_active(True)
 
     # checks player score to the dealers score
@@ -109,7 +123,7 @@ class PlayerInSeat:
             self.deal_btn.set_active(True)
             self.bet_btn.set_active(False)
             self.reset_hand()
-            for btn in self.chip_btn_images:
+            for btn in self.chip_btns:
                 btn.set_active(False)
             # game action bet placed
             self.bet_placed = True
@@ -122,7 +136,7 @@ class PlayerInSeat:
             btn_pos_y,
             self.btn_dict["bet_grey"],
         )
-        self.btn_imgs.append(self.bet_btn)
+        self.game_btns.append(self.bet_btn)
         self.deal_btn = Game_button(
             self.deal_table,
             self.btn_dict["deal_up"],
@@ -131,7 +145,7 @@ class PlayerInSeat:
             btn_pos_y,
             self.btn_dict["deal_grey"],
         )
-        self.btn_imgs.append(self.deal_btn)
+        self.game_btns.append(self.deal_btn)
         self.card_plays_btn = Game_button(
             hit_main_player,
             self.btn_dict["hit_up"],
@@ -140,7 +154,7 @@ class PlayerInSeat:
             btn_pos_y,
             self.btn_dict["hit_grey"],
         )
-        self.btn_imgs.append(self.card_plays_btn)
+        self.game_btns.append(self.card_plays_btn)
         self.stand_btn = Game_button(
             self.stand,
             self.btn_dict["stand_up"],
@@ -149,7 +163,7 @@ class PlayerInSeat:
             btn_pos_y,
             self.btn_dict["stand_grey"],
         )
-        self.btn_imgs.append(self.stand_btn)
+        self.game_btns.append(self.stand_btn)
 
     def create_chip_btns(self) -> None:
         def chip_btn_action(value: int) -> None:
@@ -171,7 +185,7 @@ class PlayerInSeat:
                 btn_y,
                 num,
             )
-            self.chip_btn_images.append(bet_btn)
+            self.chip_btns.append(bet_btn)
             btn_x += 70
 
     def reset_hand(self) -> None:
@@ -184,10 +198,10 @@ class PlayerInSeat:
             self.screen, self.main_player.get_x_y(), self.main_player.get_player_pos()
         )
         # drawing the betting chips
-        for cbtn in self.chip_btn_images:
+        for cbtn in self.chip_btns:
             cbtn.draw_button(self.screen)
         # drawing the game buttons
-        for gbtn in self.btn_imgs:
+        for gbtn in self.game_btns:
             gbtn.draw_button(self.screen)
         for card in self.main_player.hand:
             self.card_images.draw_card(self.screen, card)
@@ -202,20 +216,20 @@ class PlayerInSeat:
         )
 
     def event_handler_on_click(self) -> None:
-        for gbtn in self.btn_imgs:
+        for gbtn in self.game_btns:
             if gbtn.check_collide(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]):
                 gbtn.click()
-        for cbtn in self.chip_btn_images:
+        for cbtn in self.chip_btns:
             if cbtn.check_collide(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]):
                 cbtn.click()
 
     def event_handler_right_click(self) -> None:
-        for cbtn in self.chip_btn_images:
+        for cbtn in self.chip_btns:
             if cbtn.check_collide(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]):
                 self.player_bet.remove_chip(cbtn.value)
 
     def reset_buttons(self) -> None:
-        for gbtn in self.btn_imgs:
+        for gbtn in self.game_btns:
             gbtn.reset_image()
-        for cbtn in self.chip_btn_images:
+        for cbtn in self.chip_btns:
             cbtn.reset_image()
