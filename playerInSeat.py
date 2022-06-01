@@ -41,6 +41,7 @@ class PlayerInSeat:
         self.card_plays = CardPlays()
         self.player_bet = Betting()
         self.bet_placed = False
+        self.turn_over = False
         # text rendering
         self.text = Text()
 
@@ -59,37 +60,22 @@ class PlayerInSeat:
     def deal_table(self) -> None:
         pass
 
-    #     self.need_back = True
-    #     print(self.main_player.bet)
-    #     self.card_plays.hit(self.main_player, self.the_deck)
-    #     # self.card_plays(self.the_dealer)
-    #     self.card_plays.hit(self.main_player, self.the_deck)
-    #     # self.card_plays(self.the_dealer)
-    #     print(f"the player has {self.main_player.get_total()}")
-    #     # print(f"the dealer has {self.the_dealer.get_total()}")
-    #     self.deal_btn.set_active(False)
-    #     self.stand_btn.set_active(True)
-    #     self.card_plays_btn.set_active(True)
-
     def stand(self) -> None:
 
-        self.need_back = False
-        # returns true if dealer has 17 - 21
-        if self.main_player.check_blackjack():
-            self.check_result()
-        elif self.the_dealer.check_for_stand() or self.main_player.check_bust():
-            self.check_result()
-        else:
-            while not self.the_dealer.bust and not self.the_dealer.check_for_stand():
-                self.card_plays.hit(self.the_dealer, self.the_deck)
-                self.the_dealer.show_cards()
-            self.check_result()
-        self.deal_btn.set_active(False)
-        self.stand_btn.set_active(False)
-        self.card_plays_btn.set_active(False)
-        self.bet_btn.set_active(False)
-        for btn in self.chip_btns:
-            btn.set_active(True)
+        # self.need_back = False
+        # # returns true if dealer has 17 - 21
+        # if self.main_player.check_blackjack():
+        #     self.check_result()
+        # elif self.the_dealer.check_for_stand() or self.main_player.check_bust():
+        #     self.check_result()
+        # else:
+        #     while not self.the_dealer.bust and not self.the_dealer.check_for_stand():
+        #         self.card_plays.hit(self.the_dealer, self.the_deck)
+        #         self.the_dealer.show_cards()
+        #     self.check_result()
+        self.set_all_btns(self.game_btns, False)
+        self.set_all_btns(self.chip_btns, False)
+        self.turn_over = True
 
     # checks player score to the dealers score
     # calculates the bet return.
@@ -119,14 +105,11 @@ class PlayerInSeat:
 
         def player_place_bet() -> None:
             self.main_player.set_bet(self.player_bet.get_total())
-            print(self.main_player.get_bet())
-            self.deal_btn.set_active(True)
-            self.bet_btn.set_active(False)
-            self.reset_hand()
             for btn in self.chip_btns:
                 btn.set_active(False)
             # game action bet placed
             self.bet_placed = True
+            self.bet_btn.set_active(False)
 
         self.bet_btn = Game_button(
             player_place_bet,

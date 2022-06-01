@@ -76,6 +76,7 @@ class Character:
         return len(self.hand) == 2 and self.total == 21
 
     def reset(self) -> None:
+        print("I am the char reset method - parent method")
         self.hand = []
         self.bust = False
         self.total = 0
@@ -143,7 +144,6 @@ class Player(Character):
 
     def lost(self) -> None:
 
-        self.balance -= self.bet
         print(f"You lost, your balance is {self.balance}")
 
     def calc_win(self) -> None:
@@ -163,6 +163,7 @@ class Player(Character):
         return self.total == 21 and len(self.hand) == 2
 
     def reset_bet(self) -> None:
+        print("I am the player reset - child method")
         self.bet = 0
         self.bet_made = False
 

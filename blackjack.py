@@ -38,6 +38,7 @@ class MainGame:
         for x in range(3):
             seat = Seat(x + 1, self.check_click)
             self.seat_list.append(seat)
+        self.betting = True
         self.frame = 0
         self.the_clock = Text()
         self.bet_timer = 10
@@ -50,6 +51,7 @@ class MainGame:
         Resets the clock after the cards are dealt.
         """
         if self.betting_finished():
+            self.order_player_list()
             for game in self.games_in_play:
                 if game.main_player.get_bet_made() and len(game.main_player.hand) < 2:
                     game.card_plays.hit(game.main_player, self.main_deck)
@@ -60,6 +62,18 @@ class MainGame:
                 if len(self.dealer.hand) == 2:
                     self.players_turn = True
                     self.set_buttons()
+                    self.betting = False
+
+    def order_player_list(self):
+        """orders the player list by seat position"""
+        sorted_list: list[PlayerInSeat] = []
+        index = 3
+        while len(sorted_list) != len(self.games_in_play):
+            for game in self.games_in_play:
+                if game.main_player.get_player_pos() == index:
+                    sorted_list.append(game)
+            index -= 1
+        self.games_in_play = sorted_list
 
     def set_buttons(self) -> None:
         """
@@ -69,13 +83,16 @@ class MainGame:
         """
         first_player = True
         for game in self.games_in_play:
-            if game.bet_placed and first_player:
+            print(game.bet_placed)
+            if (game.bet_placed == True) and (first_player == True):
                 game.bet_btn.set_active(False)
                 game.deal_btn.set_active(False)
                 game.stand_btn.set_active(True)
                 game.card_plays_btn.set_active(True)
                 first_player = False
+                print("you see me once")
             else:
+                print("you see me twice")
                 game.set_all_btns(game.get_game_btns(), False)
                 game.set_all_btns(game.get_chip_btns(), False)
 
@@ -178,10 +195,9 @@ class MainGame:
         Handles the bets placed, launches the clock, deals to the
         players.
         """
-        self.start_the_clock()
-        self.deal_to_table()
-        if self.players_turn:
-            pass
+        if self.betting:
+            self.start_the_clock()
+            self.deal_to_table()
 
 
 def main() -> None:
