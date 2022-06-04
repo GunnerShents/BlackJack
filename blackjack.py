@@ -63,6 +63,8 @@ class MainGame:
                     self.players_turn = True
                     self.set_buttons()
                     self.betting = False
+                    for x in self.games_in_play:
+                        x.reset_buttons()
 
     def order_player_list(self):
         """orders the player list by seat position"""

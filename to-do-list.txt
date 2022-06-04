@@ -4,12 +4,6 @@ Jobs to do:
 
 Working on:
 
-    . Games in play needs to be ordered or a dictionary with a key as the seat number and the value
-      as the object player.
-    . The game needs to check if the player has bust or is standing. Then deactivate game buttons 
-      from that player and activate the next players buttons. Once all players in the round have had 
-      a turn then the dealer will have his go. The round ends, need to create a restart method and 
-      reset multiple fields before the next game begins.
     . Continue to allow the players to play in turn. 
     . Reset/stop the clock once the hand is delt. 
     . Super() inheritance on the player and the dealer class.
