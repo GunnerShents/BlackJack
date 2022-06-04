@@ -61,21 +61,15 @@ class PlayerInSeat:
         pass
 
     def stand(self) -> None:
-
-        # self.need_back = False
-        # # returns true if dealer has 17 - 21
-        # if self.main_player.check_blackjack():
-        #     self.check_result()
-        # elif self.the_dealer.check_for_stand() or self.main_player.check_bust():
-        #     self.check_result()
-        # else:
-        #     while not self.the_dealer.bust and not self.the_dealer.check_for_stand():
-        #         self.card_plays.hit(self.the_dealer, self.the_deck)
-        #         self.the_dealer.show_cards()
-        #     self.check_result()
+        """Sets all buttons to false, sets turn over to true
+        and returns self.turn_over"""
         self.set_all_btns(self.game_btns, False)
         self.set_all_btns(self.chip_btns, False)
         self.turn_over = True
+
+    def get_turn_over(self) -> bool:
+
+        return self.turn_over
 
     # checks player score to the dealers score
     # calculates the bet return.
@@ -90,7 +84,7 @@ class PlayerInSeat:
             self.main_player.lost()
         else:
             self.main_player.draw()
-        self.deal_btn.set_active(True)
+        # self.deal_btn.set_active(True)
         # reset bets and chip stack
         self.main_player.reset_bet()
         self.player_bet.reset()

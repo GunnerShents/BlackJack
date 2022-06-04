@@ -17,6 +17,7 @@ class MainGame:
     def __init__(self, screen: pygame.surface.Surface) -> None:
         # Prepares the game, Deck, Dealer
         self.dealer = Dealer()
+        self.card_plays = CardPlays()
         self.players_turn = False
         self.main_deck = Deck_holder()
         self.main_deck.create_multi_decks(6)
@@ -34,6 +35,7 @@ class MainGame:
         self.card_plays = CardPlays()
         self.seat_list: list[Seat] = []
         self.games_in_play: list[PlayerInSeat] = []
+        self.game_index_position = 0
         # self.hand_in_play = []
         for x in range(3):
             seat = Seat(x + 1, self.check_click)
@@ -191,6 +193,23 @@ class MainGame:
             game.set_all_btns(game.get_chip_btns(), False)
         self.games_in_play.append(game)
 
+    def end_of_hand(self):
+        while not self.dealer.check_for_stand():
+            self.card_plays.hit(self.dealer, self.main_deck)
+        for game in self.games_in_play:
+            if game.main_player.get_bet_made():
+                game.check_result()
+
+    def find_next_player(
+        self,
+    ) -> bool:
+        """Checks the next player in the games list that has bet and is in play"""
+        for game in range(self.game_index_position + 1, len(self.games_in_play)):
+            if self.games_in_play[game].main_player.get_bet_made():
+                self.game_index_position = game
+                return True
+        return False
+
     def runs_game_play(self):
         """
         This method handles all the game logic for the table.
@@ -200,6 +219,19 @@ class MainGame:
         if self.betting:
             self.start_the_clock()
             self.deal_to_table()
+        elif self.players_turn:
+            if self.games_in_play[self.game_index_position].get_turn_over():
+                if self.find_next_player():
+                    self.games_in_play[self.game_index_position].bet_btn.set_active(False)
+                    self.games_in_play[self.game_index_position].deal_btn.set_active(False)
+                    self.games_in_play[self.game_index_position].stand_btn.set_active(True)
+                    self.games_in_play[self.game_index_position].card_plays_btn.set_active(True)
+                else:
+                    self.end_of_hand()
+                    self.players_turn = False
+                    # clear the dealers hand
+                    # set self.players turn to false
+                    # set self.betting to true
 
 
 def main() -> None:

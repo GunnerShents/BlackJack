@@ -144,18 +144,19 @@ class Player(Character):
 
     def lost(self) -> None:
 
-        print(f"You lost, your balance is {self.balance}")
+        print(f"Player {self.position} You lost, your balance is {self.balance}")
 
     def calc_win(self) -> None:
         if self.check_blackjack():
             self.black_jack()
             print("Black Jack!!")
         else:
-            self.balance += self.bet
-        print(f"You win, your balance is {self.balance}")
+            self.balance += self.bet * 2
+        print(f"Player {self.position} You win, your balance is {self.balance}")
 
     def draw(self) -> None:
 
+        self.balance += self.bet
         print(f"It's a draw, your balance is {self.balance}")
 
     def check_blackjack(self) -> bool:

@@ -1,6 +1,4 @@
-games_in_play = {}
+myList = [1, 2, 3, 4, 5]
 
-for x in range(3):
-    games_in_play[x] = ""
-
-print(games_in_play.values())
+for x in myList[1:]:
+    print(x)
