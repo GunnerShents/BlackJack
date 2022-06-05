@@ -65,6 +65,7 @@ class MainGame:
                     self.players_turn = True
                     self.set_buttons()
                     self.betting = False
+                    self.set_index_position()
                     for x in self.games_in_play:
                         x.reset_buttons()
 
@@ -200,15 +201,27 @@ class MainGame:
             if game.main_player.get_bet_made():
                 game.check_result()
 
+    def set_index_position(self) -> bool:
+        """Sets game_index_position to the first player in the list who has bet and
+        is in play"""
+        for index, game in enumerate(self.games_in_play):
+            if game.main_player.get_bet_made():
+                self.game_index_position = index
+                return True
+        return False
+
     def find_next_player(
         self,
     ) -> bool:
         """Checks the next player in the games list that has bet and is in play"""
-        for game in range(self.game_index_position + 1, len(self.games_in_play)):
-            if self.games_in_play[game].main_player.get_bet_made():
-                self.game_index_position = game
-                return True
-        return False
+        if self.game_index_position == len(self.games_in_play) - 1:
+            return False
+        else:
+            for game in range(self.game_index_position + 1, len(self.games_in_play)):
+                if self.games_in_play[game].main_player.get_bet_made():
+                    self.game_index_position = game
+                    return True
+            return False
 
     def runs_game_play(self):
         """
