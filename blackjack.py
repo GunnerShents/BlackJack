@@ -84,7 +84,7 @@ class MainGame:
         """
         For players with a placed bet deactivates the deal and bet button.
         Activates the stand and hit buttons. Players at the table with no bets placed
-        have their betting chips deactivated.
+        have their betting chips deactivated and turn_over variable is set to True.
         """
         first_player = True
         for game in self.games_in_play:
@@ -95,9 +95,7 @@ class MainGame:
                 game.stand_btn.set_active(True)
                 game.card_plays_btn.set_active(True)
                 first_player = False
-                print("you see me once")
             else:
-                print("you see me twice")
                 game.set_all_btns(game.get_game_btns(), False)
                 game.set_all_btns(game.get_chip_btns(), False)
 
@@ -194,7 +192,10 @@ class MainGame:
             game.set_all_btns(game.get_chip_btns(), False)
         self.games_in_play.append(game)
 
-    def end_of_hand(self):
+    def dealer_and_results(self):
+        """Shows the dealers cards, hits to dealer if needed.
+        Calulates the results for all hands playing.
+        """
         while not self.dealer.check_for_stand():
             self.card_plays.hit(self.dealer, self.main_deck)
         for game in self.games_in_play:
@@ -240,11 +241,17 @@ class MainGame:
                     self.games_in_play[self.game_index_position].stand_btn.set_active(True)
                     self.games_in_play[self.game_index_position].card_plays_btn.set_active(True)
                 else:
-                    self.end_of_hand()
+                    self.dealer_and_results()
                     self.players_turn = False
                     # clear the dealers hand
+                    # self.dealer.reset()
                     # set self.players turn to false
                     # set self.betting to true
+
+    def reset_all_hands(self):
+        self.dealer.reset()
+        for game in self.games_in_play:
+            game.reset_hand()
 
 
 def main() -> None:

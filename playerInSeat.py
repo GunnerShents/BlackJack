@@ -65,12 +65,14 @@ class PlayerInSeat:
         and returns self.turn_over"""
         self.set_all_btns(self.game_btns, False)
         self.set_all_btns(self.chip_btns, False)
-        self.turn_over = True
+        self.set_turn_over(True)
 
     def get_turn_over(self) -> bool:
-
         return self.turn_over
-
+    
+    def set_turn_over(self, bool:bool) -> None:
+        self.turn_over = bool
+    
     # checks player score to the dealers score
     # calculates the bet return.
     def check_result(self) -> None:
