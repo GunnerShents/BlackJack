@@ -100,10 +100,9 @@ class MainGame:
         """
         first_player = True
         for game in self.games_in_play:
-            print(game.bet_placed)
             if (game.bet_placed == True) and (first_player == True):
                 game.bet_btn.set_active(False)
-                game.deal_btn.set_active(False)
+                game.double_btn.set_active(True)
                 game.stand_btn.set_active(True)
                 game.card_plays_btn.set_active(True)
                 first_player = False
@@ -189,11 +188,10 @@ class MainGame:
         """
         for seat in self.seat_list:
             if seat.check_collide_click(*pygame.mouse.get_pos()):
-                print(seat.position)
                 self.create_game(seat.x, seat.y, seat.get_position())
                 self.seat_list.remove(seat)
+        # actions click function if reset button clicked and active
         if self.reset_btn.check_collide(*pygame.mouse.get_pos()):
-            print(self.reset_btn.index)
             self.reset_btn.click()
 
     # creates the player object
@@ -253,7 +251,7 @@ class MainGame:
             if self.games_in_play[self.game_index_position].get_turn_over():
                 if self.find_next_player():
                     self.games_in_play[self.game_index_position].bet_btn.set_active(False)
-                    self.games_in_play[self.game_index_position].deal_btn.set_active(False)
+                    self.games_in_play[self.game_index_position].double_btn.set_active(True)
                     self.games_in_play[self.game_index_position].stand_btn.set_active(True)
                     self.games_in_play[self.game_index_position].card_plays_btn.set_active(True)
                 else:
@@ -263,10 +261,16 @@ class MainGame:
                     self.reset_btn.reset_image()
 
     def reset_all_hands(self):
-        # resets the hand
+        """resets the hand after a round has played, including the clock, the,
+        the dealer, the player betting chips, the bet button and betting"""
+        self.reset_clock()
         self.dealer.reset()
         for game in self.games_in_play:
             game.main_player.reset()
+            game.bet_placed = False
+            game.set_turn_over(False)
+            game.set_all_btns(game.chip_btns, True)
+        self.reset_btn.set_active(False)
         self.betting = True
 
 
@@ -293,7 +297,6 @@ def main() -> None:
             if event.type == pygame.QUIT:
                 running = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                print(pygame.mouse.get_pos())
                 if pygame.mouse.get_pressed() == (1, 0, 0):
                     main_game.check_click()
                     for game in main_game.games_in_play:
