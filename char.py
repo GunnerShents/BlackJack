@@ -135,6 +135,10 @@ class Player(Character):
             self.balance -= self.bet
             self.bet_made = True
 
+    def can_double(self) -> bool:
+        """Checks if you can double down"""
+        return self.balance > self.bet
+
     def get_bet(self) -> int:
         return self.bet
 
@@ -167,6 +171,9 @@ class Player(Character):
         print("I am the player reset - child method")
         self.bet = 0
         self.bet_made = False
+
+    def reset(self):
+        super().reset()
 
 
 class Dealer(Character):

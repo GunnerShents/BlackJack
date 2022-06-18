@@ -46,7 +46,7 @@ class PlayerInSeat:
         self.text = Text()
 
     def set_all_btns(self, btn_list: list[T], bool: bool):
-        """sets all the chip buttons to the argument"""
+        """sets all the buttons in btn_list to the argument"""
         for btn in btn_list:
             btn.set_active(bool)
 
@@ -57,8 +57,12 @@ class PlayerInSeat:
         return self.game_btns
 
     # # deal one card to each player in the self.total_player list
-    def deal_table(self) -> None:
-        pass
+    def double(self) -> None:
+        """Checks the player has enough balance to make a double bet.
+        Takes one card and actions the stand function"""
+        if self.main_player.can_double():
+            self.card_plays.hit(self.main_player, self.the_deck)
+            self.stand()
 
     def stand(self) -> None:
         """Sets all buttons to false, sets turn over to true
@@ -86,7 +90,7 @@ class PlayerInSeat:
             self.main_player.lost()
         else:
             self.main_player.draw()
-        # self.deal_btn.set_active(True)
+        # self.double_btn.set_active(True)
         # reset bets and chip stack
         self.main_player.reset_bet()
         self.player_bet.reset()
@@ -98,6 +102,7 @@ class PlayerInSeat:
 
         def hit_main_player() -> None:
             self.card_plays.hit(self.main_player, self.the_deck)
+            self.double_btn.set_active(False)
 
         def player_place_bet() -> None:
             self.main_player.set_bet(self.player_bet.get_total())
@@ -116,15 +121,15 @@ class PlayerInSeat:
             self.btn_dict["bet_grey"],
         )
         self.game_btns.append(self.bet_btn)
-        self.deal_btn = Game_button(
-            self.deal_table,
-            self.btn_dict["deal_up"],
-            self.btn_dict["deal_down"],
+        self.double_btn = Game_button(
+            self.double,
+            self.btn_dict["bet_btn13"],
+            self.btn_dict["bet_btn14"],
             btn_pos_x + off_set,
             btn_pos_y,
-            self.btn_dict["deal_grey"],
+            self.btn_dict["bet_btn12"],
         )
-        self.game_btns.append(self.deal_btn)
+        self.game_btns.append(self.double_btn)
         self.card_plays_btn = Game_button(
             hit_main_player,
             self.btn_dict["hit_up"],
