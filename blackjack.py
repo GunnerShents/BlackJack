@@ -8,6 +8,7 @@ from cardclasses import Deck_holder, CardImages
 from char import Player, Dealer
 from seat import Seat
 from render import Text, CardPlays
+from buttons import Game_button, generate_images
 
 seed = random.randrange(sys.maxsize)
 random.seed()
@@ -23,6 +24,17 @@ class MainGame:
         self.main_deck.create_multi_decks(6)
         self.main_deck.shuffle_holder()
         self.starting_cards = 2
+        # ---------------------------------
+        # Creates the game reset button
+        all_images: dict[str, pygame.pygame.Surface] = generate_images()
+        self.reset_btn = Game_button(
+            self.reset_all_hands,
+            all_images["reset1"],
+            all_images["reset2"],
+            config.WIDTH // 24,
+            config.HEIGHT // 24,
+            all_images["reset3"],
+        )
         # --------------------------------
         self.screen = screen
         self.table = pygame.image.load(
@@ -152,12 +164,13 @@ class MainGame:
 
     def update_graphics_events(self) -> None:
         """
-        Draws the table, card_deck, seat images and checks the colide
+        Draws the table, card_deck, seat images, reset button and checks the colide
         function on the seat image.
         Run function in the main game body
         """
         self.screen.blit(self.table, (0, 0))
         self.deck_img.draw_deck(self.screen)
+        self.reset_btn.draw_button(self.screen)
         if self.players_turn:
             self.draw_card_images.draw_card_back(self.screen, self.dealer.hand[0])
             self.draw_card_images.draw_card(self.screen, self.dealer.hand[1])
@@ -179,6 +192,9 @@ class MainGame:
                 print(seat.position)
                 self.create_game(seat.x, seat.y, seat.get_position())
                 self.seat_list.remove(seat)
+        if self.reset_btn.check_collide(*pygame.mouse.get_pos()):
+            print(self.reset_btn.index)
+            self.reset_btn.click()
 
     # creates the player object
     def create_game(self, x: int, y: int, pos: int) -> None:
@@ -243,15 +259,15 @@ class MainGame:
                 else:
                     self.dealer_and_results()
                     self.players_turn = False
-                    # clear the dealers hand
-                    # self.dealer.reset()
-                    # set self.players turn to false
-                    # set self.betting to true
+                    self.reset_btn.set_active(True)
+                    self.reset_btn.reset_image()
 
     def reset_all_hands(self):
-        self.dealer.reset()
-        for game in self.games_in_play:
-            game.reset_hand()
+        # resets the hand
+        # Empty the dealers hand
+        # Empty the platers hand
+        # reset the game funtions
+        pass
 
 
 def main() -> None:
@@ -288,6 +304,7 @@ def main() -> None:
             elif event.type == pygame.MOUSEBUTTONUP:
                 for game in main_game.games_in_play:
                     game.reset_buttons()
+                main_game.reset_btn.reset_image()
 
         screen.fill(config.BLACK)
         main_game.update_graphics_events()
