@@ -264,10 +264,10 @@ class MainGame:
 
     def reset_all_hands(self):
         # resets the hand
-        # Empty the dealers hand
-        # Empty the platers hand
-        # reset the game funtions
-        pass
+        self.dealer.reset()
+        for game in self.games_in_play:
+            game.main_player.reset()
+        self.betting = True
 
 
 def main() -> None:

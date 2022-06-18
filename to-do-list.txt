@@ -4,7 +4,7 @@ Jobs to do:
 
 Working on:
 
-    . Create a reset button to claer all the hands and reset for a new game.
+    . Continue resetting the round for the next hand - Reset the game and chip buttons.
     . Check that the result method in playerInSeat class calculates if the player has blackjack 
       and the deal has 21 with more than 2 cards. The player should win the hand.
       Continue to allow the players to play in turn. 

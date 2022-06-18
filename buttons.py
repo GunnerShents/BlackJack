@@ -7,7 +7,7 @@ import config
 
 
 # ----------------------------------------------------------------
-# pulls all graphice into a dictionary, key is the png name.
+# pulls all graphics into a dictionary, key is the png name.
 # value is the pygame image.
 def generate_images() -> Dict[str, Surface]:
     btn_dict: Dict[str, Surface] = {}

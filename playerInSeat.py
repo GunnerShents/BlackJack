@@ -69,10 +69,10 @@ class PlayerInSeat:
 
     def get_turn_over(self) -> bool:
         return self.turn_over
-    
-    def set_turn_over(self, bool:bool) -> None:
+
+    def set_turn_over(self, bool: bool) -> None:
         self.turn_over = bool
-    
+
     # checks player score to the dealers score
     # calculates the bet return.
     def check_result(self) -> None:

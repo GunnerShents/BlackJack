@@ -190,7 +190,5 @@ class Dealer(Character):
         return (self.dealer_x, self.dealer_y)
 
     def check_for_stand(self) -> bool:
-        total = self.get_total()
-        if 17 <= total <= 21:
-            return True
-        return False
+
+        return self.get_total() >= 17
