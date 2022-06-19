@@ -58,9 +58,10 @@ class PlayerInSeat:
 
     # # deal one card to each player in the self.total_player list
     def double(self) -> None:
-        """Checks the player has enough balance to make a double bet.
-        Takes one card and actions the stand function"""
-        if self.main_player.can_double():
+        """Checks the player has enough balance. Deducts the bet from balance, takes
+        one card and actions the stand function"""
+        if self.main_player.double_bet():
+            self.player_bet.double_stack()
             self.card_plays.hit(self.main_player, self.the_deck)
             self.stand()
 

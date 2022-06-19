@@ -9,6 +9,7 @@ from char import Player, Dealer
 from seat import Seat
 from render import Text, CardPlays
 from buttons import Game_button, generate_images
+from timer import Timer
 
 seed = random.randrange(sys.maxsize)
 random.seed()
@@ -43,6 +44,7 @@ class MainGame:
         self.deck_img = Deck_holder()
         # ---------------------------------
         # Sets up the game
+        self.timer = Timer(config.FPS)
         self.draw_card_images = CardImages()
         self.card_plays = CardPlays()
         self.seat_list: list[Seat] = []
@@ -121,7 +123,7 @@ class MainGame:
                 if game.main_player.get_bet_made():
                     all_bets += 1
 
-            return all_bets == len(self.games_in_play) or self.get_second() == self.bet_timer
+            return all_bets == len(self.games_in_play) or self.timer.timer_finished()
         return False
 
     # -----------------------------------------------------
@@ -131,32 +133,18 @@ class MainGame:
         if any player has placed a bet start the clock
         """
         if any(game.bet_placed for game in self.games_in_play):
-            self.run_clock()
-
-    def run_clock(self) -> None:
-        """
-        Checks the bet_timer in seconds have not passed. Updates the frames and
-        renders the changeable clock to the game board.
-        """
-        if self.get_second() < self.bet_timer:
-            self.frame += 1
+            self.timer.set_timer_limit(10)
+            self.timer.run_timer()
             self.draw_clock()
-
-    def get_second(self) -> int:
-        second = self.frame // config.FPS
-        return second
 
     def draw_clock(self) -> None:
         self.the_clock.drawText(
             surf=self.screen,
-            text=str(self.get_second()),
+            text=str(self.timer.get_second()),
             size=30,
             coords=(config.WIDTH // 20 * 18, config.HEIGHT // 20 * 1),
             colour=config.WHITE,
         )
-
-    def reset_clock(self) -> None:
-        self.frame = 0
 
     # ------------------------------------------------------
     # Game methods
@@ -263,7 +251,7 @@ class MainGame:
     def reset_all_hands(self):
         """resets the hand after a round has played, including the clock, the,
         the dealer, the player betting chips, the bet button and betting"""
-        self.reset_clock()
+        self.timer.reset_timer()
         self.dealer.reset()
         for game in self.games_in_play:
             game.main_player.reset()
@@ -289,10 +277,8 @@ def main() -> None:
     # --------------------------------------------------------------------------
     # main game loop
     while running:
-
         clock.tick(config.FPS)
         for event in pygame.event.get():
-
             # Check for closing window
             if event.type == pygame.QUIT:
                 running = False

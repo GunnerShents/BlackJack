@@ -135,9 +135,13 @@ class Player(Character):
             self.balance -= self.bet
             self.bet_made = True
 
-    def can_double(self) -> bool:
-        """Checks if you can double down"""
-        return self.balance > self.bet
+    def double_bet(self) -> bool:
+        """Checks if the player has enough balance to double. Takes the bet away
+        from the balance"""
+        if self.balance >= self.bet:
+            self.balance -= self.get_bet()
+            return True
+        return False
 
     def get_bet(self) -> int:
         return self.bet

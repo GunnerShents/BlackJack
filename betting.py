@@ -43,25 +43,40 @@ class Betting:
         self.total = 0
         self.bets_placed = []
 
-    def draw_total_bet(self, area: Surface, player_pos:tuple[int,int], player_seat:int) -> None:
+    def draw_total_bet(self, area: Surface, player_pos: tuple[int, int], player_seat: int) -> None:
         if len(self.bets_placed) > 0:
-            chip_x, chip_y = self.get_bet_chip_coords(player_seat, player_pos,)
+            chip_x, chip_y = self.get_bet_chip_coords(
+                player_seat,
+                player_pos,
+            )
             for chip in self.bets_placed:
-                #player x, y is corrected to render infront of chip button
-                #graphics.
-                chip.x = chip_x 
+                # player x, y is corrected to render infront of chip button
+                # graphics.
+                chip.x = chip_x
                 chip.y = chip_y
                 chip.draw_chip(area)
                 chip_y -= 4
 
-    def get_bet_chip_coords(self, player_pos:int, player_coords:tuple[int,int]) -> tuple[int,int]:
+    def double_stack(self) -> list[Chip]:
+        """Creates a new list, iterates through bets_placed, creates new chips,
+        ammend x co-ord and appends to new list. Then extends the bets_placed list."""
+        new_stack: list[Chip] = []
+        for chip in self.bets_placed:
+            new_x = chip.x - chip.image.get_width()
+            new_chip = Chip(chip.chip_value, chip.image, new_x, chip.y)
+            new_stack.append(new_chip)
+        return new_stack
+
+    def get_bet_chip_coords(
+        self, player_pos: int, player_coords: tuple[int, int]
+    ) -> tuple[int, int]:
         x, y = player_coords
-        x += 60 
+        x += 60
         if player_pos == 2:
             y += 120
         else:
             y += 160
-        return x, y       
+        return x, y
 
     def get_total(self) -> int:
         return self.total

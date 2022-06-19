@@ -1,11 +1,34 @@
-myList = [1, 2, 3, 4, 5]
-
-for x in myList[1:]:
-    print(x)
+from unicodedata import name
+from dataclasses import dataclass
 
 
-def reverse_word(my_word):
-    print(my_word[::-1])
+@dataclass
+class Dog:
+
+    name: str
+    breed: str
+    age: int
 
 
-reverse_word("Calculator")
+a_list = []
+a_dog = Dog("Charlie", "Lab", 5)
+a_list.append(a_dog)
+b_dog = Dog("Bingo", "Lab", 5)
+a_list.append(b_dog)
+
+
+def double(my_list):
+    b_list = []
+    for dog in my_list:
+        new_dog = Dog("Simon", dog.breed, 10)
+        b_list.append(new_dog)
+    return b_list
+
+
+my_dogs = double(a_list)
+a_list.extend(my_dogs)
+
+for x in a_list:
+    print(x.name)
+    print(x.breed)
+    print(x.age)
