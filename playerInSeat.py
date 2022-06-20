@@ -91,10 +91,8 @@ class PlayerInSeat:
             self.main_player.lost()
         else:
             self.main_player.draw()
-        # self.double_btn.set_active(True)
-        # reset bets and chip stack
         self.main_player.reset_bet()
-        self.player_bet.reset()
+        # self.player_bet.reset()
 
     def create_game_buttons(self) -> None:
         # space out butons
@@ -106,10 +104,11 @@ class PlayerInSeat:
             self.double_btn.set_active(False)
 
         def player_place_bet() -> None:
-            self.main_player.set_bet(self.player_bet.get_total())
+            """Controls the functunctinality of the bet button for the player.
+            Deactivates the chips and bet button. sets bet_placed to true"""
+            self.main_player.set_bet()
             for btn in self.chip_btns:
                 btn.set_active(False)
-            # game action bet placed
             self.bet_placed = True
             self.bet_btn.set_active(False)
 
@@ -152,10 +151,8 @@ class PlayerInSeat:
 
     def create_chip_btns(self) -> None:
         def chip_btn_action(value: int) -> None:
-
-            self.player_bet.create_chip(
-                value, self.btn_dict[f"chip_{value}_up"], self.main_player.get_balance()
-            )
+            """Creates a chip with the argument value"""
+            self.player_bet.create_chip(value, self.btn_dict[f"chip_{value}_up"], self.main_player)
             self.bet_btn.set_active(True)
 
         self.btn_dict = generate_images()
@@ -211,7 +208,7 @@ class PlayerInSeat:
     def event_handler_right_click(self) -> None:
         for cbtn in self.chip_btns:
             if cbtn.check_collide(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]):
-                self.player_bet.remove_chip(cbtn.value)
+                self.player_bet.remove_chip(cbtn.value, self.main_player)
 
     def reset_buttons(self) -> None:
         for gbtn in self.game_btns:

@@ -5,6 +5,8 @@ from typing import List
 
 from pygame.surface import Surface
 
+from char import Player
+
 
 class Chip:
     """
@@ -36,11 +38,10 @@ class Betting:
         self,
     ) -> None:
 
-        self.total = 0
         self.bets_placed: List[Chip] = []
 
     def reset(self) -> None:
-        self.total = 0
+        """Clears all the betting chips."""
         self.bets_placed = []
 
     def draw_total_bet(self, area: Surface, player_pos: tuple[int, int], player_seat: int) -> None:
@@ -78,24 +79,26 @@ class Betting:
             y += 160
         return x, y
 
-    def get_total(self) -> int:
-        return self.total
-
-    def create_chip(self, value: int, image: Surface, current_player_balance: int) -> None:
-        if self.get_total() + value <= current_player_balance:
+    def create_chip(self, value: int, image: Surface, current_player: Player) -> None:
+        """Checks there is enough balance the place another betting chip down.
+        Creates a chip with the correct value and image, adds to bets_placed lit.
+        tallies the total, deducts the value from the player balance."""
+        if current_player.get_bet() + value <= current_player.get_balance():
             new_chip = Chip(value, image)
             self.bets_placed.append(new_chip)
-            self.total += value
-            print(self.get_total())
+            current_player.bet += value
+            current_player.balance -= value
+            print(current_player.get_bet())
 
     def check_stack(self, value: int) -> bool:
         return any(chip.chip_value == value for chip in self.bets_placed)
 
-    def remove_chip(self, value: int) -> None:
+    def remove_chip(self, value: int, current_player: Player) -> None:
         if self.check_stack(value):
             for chip in reversed(self.bets_placed):
                 if chip.chip_value == value:
-                    self.total -= chip.chip_value
                     self.bets_placed.remove(chip)
+                    current_player.bet -= value
+                    current_player.balance += value
+                    print(current_player.get_bet())
                     break
-        print(self.get_total())

@@ -250,7 +250,7 @@ class MainGame:
 
     def reset_all_hands(self):
         """resets the hand after a round has played, including the clock, the,
-        the dealer, the player betting chips, the bet button and betting"""
+        the dealer, the player betting chips, the bet button and betting, clears chip bets."""
         self.timer.reset_timer()
         self.dealer.reset()
         for game in self.games_in_play:
@@ -258,6 +258,7 @@ class MainGame:
             game.bet_placed = False
             game.set_turn_over(False)
             game.set_all_btns(game.chip_btns, True)
+            game.player_bet.reset()
         self.reset_btn.set_active(False)
         self.betting = True
 

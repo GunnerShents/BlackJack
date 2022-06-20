@@ -128,11 +128,9 @@ class Player(Character):
     def get_balance(self) -> int:
         return self.balance
 
-    # checks bet is valid, sets self.bet and deducts bet from balance.
-    def set_bet(self, amount: int) -> None:
+    def set_bet(self) -> None:
+        """Checks a bet has not been made, sets bet_made to true"""
         if not self.bet_made:
-            self.bet = amount
-            self.balance -= self.bet
             self.bet_made = True
 
     def double_bet(self) -> bool:

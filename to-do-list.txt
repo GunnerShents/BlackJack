@@ -4,23 +4,18 @@ Jobs to do:
 
 Working on:
 
-    . Deduct chip value from balance as you place chip on  table. Also add back if
-      you right click.
-      Need a way to leave the table.
+    . Need a way to leave the table.
     . Stop players with zero balance from playing.
     . Look into the chip stack growing to high.
     . Check that the result method in playerInSeat class calculates if the player has blackjack 
       and the deal has 21 with more than 2 cards. The player should win the hand.
       Continue to allow the players to play in turn. 
-    . Look into a player joining the hand half way through and not being able to place a bet until
-      the hand has finished.
     . Character class has a hand list and so do the children classes,
       check to see if parent class is enough.
     
 
 Extended project:
     . Look at adding a split button and logic.
-    . Look at adding a double button and logic.
     . Look at adding an insurance button?
     . Chicken dinnner - card counting game.
     . Test the game with @crypto.
