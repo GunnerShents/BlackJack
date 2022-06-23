@@ -21,7 +21,7 @@ class PlayerInSeat:
     ) -> None:
         self.screen = screen
         self.the_deck = main_deck
-        self.starting_cards = 2
+        # self.starting_cards = 2
         # player attributes
         self.main_player = main_player
         # dealer attributes
@@ -78,9 +78,9 @@ class PlayerInSeat:
     def set_turn_over(self, bool: bool) -> None:
         self.turn_over = bool
 
-    # checks player score to the dealers score
-    # calculates the bet return.
     def check_result(self) -> None:
+        """Checks the players hand to the dealers hand and runs the correct method based on the results.
+        The method then resets the players bet to zero and makes player_bet flag False."""
         if self.main_player.check_bust():
             self.main_player.lost()
         elif self.the_dealer.check_bust():
@@ -92,7 +92,6 @@ class PlayerInSeat:
         else:
             self.main_player.draw()
         self.main_player.reset_bet()
-        # self.player_bet.reset()
 
     def create_game_buttons(self) -> None:
         # space out butons

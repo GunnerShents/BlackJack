@@ -2,7 +2,7 @@
 # constructor (self, chip_value, img)
 # class betting()
 from typing import List
-
+from buttons import generate_images
 from pygame.surface import Surface
 
 from char import Player
@@ -39,6 +39,7 @@ class Betting:
     ) -> None:
 
         self.bets_placed: List[Chip] = []
+        self.images = generate_images()
 
     def reset(self) -> None:
         """Clears all the betting chips."""
@@ -63,8 +64,7 @@ class Betting:
         ammend x co-ord and appends to new list. Then extends the bets_placed list."""
         new_stack: list[Chip] = []
         for chip in self.bets_placed:
-            new_x = chip.x - chip.image.get_width()
-            new_chip = Chip(chip.chip_value, chip.image, new_x, chip.y)
+            new_chip = Chip(chip.chip_value, chip.image, chip.x, chip.y)
             new_stack.append(new_chip)
         return new_stack
 
@@ -80,17 +80,52 @@ class Betting:
         return x, y
 
     def create_chip(self, value: int, image: Surface, current_player: Player) -> None:
-        """Checks there is enough balance the place another betting chip down.
-        Creates a chip with the correct value and image, adds to bets_placed lit.
+        """Checks there is enough balance places another betting chip down.
+        Creates a chip with the correct value and image, adds to bets_placed list.
         tallies the total, deducts the value from the player balance."""
-        if current_player.get_bet() + value <= current_player.get_balance():
+        if value <= current_player.get_balance():
+            value, image = self.check_chip(value, image, current_player)
             new_chip = Chip(value, image)
             self.bets_placed.append(new_chip)
             current_player.bet += value
             current_player.balance -= value
-            print(current_player.get_bet())
+
+    def check_chip(self, value: int, image: Surface, current_player: Player) -> tuple[int, Surface]:
+        """Checks if the new chip clicked can be grouped into a higher value chip
+        @returns a tuple chip value and image."""
+        num = 0
+        for chip in self.bets_placed:
+            if chip.get_chip_value() == value:
+                num += 1
+        if value == 5 and num == 3:
+            for x in range(4):
+                self.remove_chip(value, current_player)
+            value = 20
+            image = self.images[f"chip_{value}_up"]
+            return (value, image)
+        elif value == 10 and num == 4:
+            for x in range(5):
+                self.remove_chip(value, current_player)
+            value = 50
+            image = self.images[f"chip_{value}_up"]
+            return (value, image)
+        elif value == 20 and num == 4:
+            for x in range(5):
+                self.remove_chip(value, current_player)
+            value = 100
+            image = self.images[f"chip_{value}_up"]
+            return (value, image)
+        elif value == 50 and num == 1:
+            for x in range(3):
+                self.remove_chip(value, current_player)
+            value = 100
+            image = self.images[f"chip_{value}_up"]
+            return (value, image)
+        else:
+            return (value, image)
 
     def check_stack(self, value: int) -> bool:
+        """Checks a chip with @argument value is in bets_placed list"""
         return any(chip.chip_value == value for chip in self.bets_placed)
 
     def remove_chip(self, value: int, current_player: Player) -> None:

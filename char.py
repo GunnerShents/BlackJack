@@ -92,7 +92,6 @@ class Player(Character):
 
     def __init__(self, name: str, balance: int, start_x: int, start_y: int, position: int) -> None:
 
-        # Load coin image and transform the size.
         self.position = position
         self.hand = []
         self.name = name
