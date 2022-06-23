@@ -94,31 +94,21 @@ class Betting:
         """Checks if the new chip clicked can be grouped into a higher value chip
         @returns a tuple chip value and image."""
         num = 0
+        # key is the chip value, first value holds number of chips needed to group
+        # scenod value holds number of times to remove old chips, third is new chip amount.
+        scale: dict[int, list[int]] = {
+            5: [3, 4, 20],
+            10: [4, 5, 50],
+            20: [4, 5, 100],
+            50: [1, 3, 100],
+        }
         for chip in self.bets_placed:
             if chip.get_chip_value() == value:
                 num += 1
-        if value == 5 and num == 3:
-            for x in range(4):
+        if value and num == scale[value][0]:
+            for x in range(scale[value][1]):
                 self.remove_chip(value, current_player)
-            value = 20
-            image = self.images[f"chip_{value}_up"]
-            return (value, image)
-        elif value == 10 and num == 4:
-            for x in range(5):
-                self.remove_chip(value, current_player)
-            value = 50
-            image = self.images[f"chip_{value}_up"]
-            return (value, image)
-        elif value == 20 and num == 4:
-            for x in range(5):
-                self.remove_chip(value, current_player)
-            value = 100
-            image = self.images[f"chip_{value}_up"]
-            return (value, image)
-        elif value == 50 and num == 1:
-            for x in range(3):
-                self.remove_chip(value, current_player)
-            value = 100
+            value = scale[value][2]
             image = self.images[f"chip_{value}_up"]
             return (value, image)
         else:
