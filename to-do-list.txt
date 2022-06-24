@@ -4,8 +4,8 @@ Jobs to do:
 
 Working on:
 
-    . Balance to correct when chip changes.
-      Need a way to leave the table.
+    . Correct chip grouping when the double button is pressed.
+    . Need a way to leave the table.
     . Stop players with zero balance from playing.
     . Check double down method - not working at mo.
     . Check that the result method in playerInSeat class calculates if the player has blackjack 

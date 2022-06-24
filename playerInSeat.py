@@ -61,7 +61,7 @@ class PlayerInSeat:
         """Checks the player has enough balance. Deducts the bet from balance, takes
         one card and actions the stand function"""
         if self.main_player.double_bet():
-            self.player_bet.double_stack()
+            self.player_bet.double_stack(self.main_player)
             self.card_plays.hit(self.main_player, self.the_deck)
             self.stand()
 
