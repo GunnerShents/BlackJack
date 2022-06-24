@@ -87,9 +87,7 @@ class Betting:
         if value <= current_player.get_balance():
             value, image = self.check_chip(value, image, current_player)
             new_chip = Chip(value, image)
-            self.bets_placed.append(new_chip)
-            current_player.bet += value
-            current_player.balance -= value
+            self.add_chip(new_chip, current_player)
 
     def check_chip(self, value: int, image: Surface, current_player: Player) -> tuple[int, Surface]:
         """Checks if the new chip clicked can be grouped into a higher value chip
@@ -107,11 +105,13 @@ class Betting:
             if chip.get_chip_value() == value:
                 num += 1
         if value != 100 and num == scale[value][0]:
+            print(f"i am working with value {value}")
             for x in range(scale[value][1]):
                 self.remove_chip(value, current_player)
             value = scale[value][2]
             image = self.images[f"chip_{value}_up"]
-            self.check_chip(value, image, current_player)
+            value, image = self.check_chip(value, image, current_player)
+            print(f"I am the value {value}")
             return (value, image)
         else:
             return (value, image)
@@ -119,6 +119,13 @@ class Betting:
     def check_stack(self, value: int) -> bool:
         """Checks a chip with @argument value is in bets_placed list"""
         return any(chip.chip_value == value for chip in self.bets_placed)
+
+    def add_chip(self, a_chip: Chip, current_player: Player):
+        """Adds a chip to the bets_placed list and increases the total to the players
+        total bet made."""
+        self.bets_placed.append(a_chip)
+        current_player.bet += a_chip.get_chip_value()
+        current_player.balance -= a_chip.get_chip_value()
 
     def remove_chip(self, value: int, current_player: Player) -> None:
         if self.check_stack(value):
