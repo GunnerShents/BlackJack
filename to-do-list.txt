@@ -4,9 +4,10 @@ Jobs to do:
 
 Working on:
 
-    . Need a way to leave the table.
+    . Balance to correct when chip changes.
+      Need a way to leave the table.
     . Stop players with zero balance from playing.
-    . Look into the chip stack growing to high.
+    . Check double down method - not working at mo.
     . Check that the result method in playerInSeat class calculates if the player has blackjack 
       and the deal has 21 with more than 2 cards. The player should win the hand.
       Continue to allow the players to play in turn. 

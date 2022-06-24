@@ -61,11 +61,12 @@ class Betting:
 
     def double_stack(self) -> list[Chip]:
         """Creates a new list, iterates through bets_placed, creates new chips,
-        ammend x co-ord and appends to new list. Then extends the bets_placed list."""
+        appends to new list. Then extends the bets_placed list."""
         new_stack: list[Chip] = []
         for chip in self.bets_placed:
             new_chip = Chip(chip.chip_value, chip.image, chip.x, chip.y)
             new_stack.append(new_chip)
+        self.bets_placed.extend(new_stack)
         return new_stack
 
     def get_bet_chip_coords(
@@ -105,11 +106,12 @@ class Betting:
         for chip in self.bets_placed:
             if chip.get_chip_value() == value:
                 num += 1
-        if value and num == scale[value][0]:
+        if value != 100 and num == scale[value][0]:
             for x in range(scale[value][1]):
                 self.remove_chip(value, current_player)
             value = scale[value][2]
             image = self.images[f"chip_{value}_up"]
+            self.check_chip(value, image, current_player)
             return (value, image)
         else:
             return (value, image)
