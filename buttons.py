@@ -20,13 +20,13 @@ def generate_images() -> Dict[str, Surface]:
     btn: str
     for btn in btn_dict.keys():
         if btn[:5] == "chip_":
-            #scales the chip_btns
+            # scales the chip_btns
             btn_dict[btn] = pygame.transform.scale(
                 btn_dict[btn],
                 ((config.BUTTON_WIDTH / 5) * 3, (config.BUTTON_HEIGHT / 5) * 3),
             )
         else:
-            #scles game buttons
+            # scles game buttons
             btn_dict[btn] = pygame.transform.scale(
                 btn_dict[btn], (config.BUTTON_WIDTH, config.BUTTON_HEIGHT)
             )
@@ -92,8 +92,9 @@ class Game_button(Button):
         x: int,
         y: int,
         grey_image: Surface,
+        active: bool = False,
     ):
-        super().__init__(on_click, button_up_img, button_down_img, x, y, active=False)
+        super().__init__(on_click, button_up_img, button_down_img, x, y, active=active)
         self.grey_img = grey_image
         self.image.append(self.grey_img)
         if not self.active:

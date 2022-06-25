@@ -98,7 +98,7 @@ class Betting:
             5: [3, 4, 20],
             10: [4, 5, 50],
             20: [4, 5, 100],
-            50: [1, 3, 100],
+            50: [1, 2, 100],
         }
         for chip in self.bets_placed:
             if chip.get_chip_value() == value:

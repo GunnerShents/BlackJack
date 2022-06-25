@@ -21,9 +21,9 @@ class PlayerInSeat:
     ) -> None:
         self.screen = screen
         self.the_deck = main_deck
-        # self.starting_cards = 2
         # player attributes
         self.main_player = main_player
+        self.game_over = False
         # dealer attributes
         self.the_dealer = the_dealer
         # images and button attributes
@@ -110,6 +110,36 @@ class PlayerInSeat:
                 btn.set_active(False)
             self.bet_placed = True
             self.bet_btn.set_active(False)
+            self.leave_btn.set_active(False)
+
+        def set_game_over() -> None:
+            """Sets game_over to True. Will update database."""
+            self.game_over = True
+
+        self.leave_btn = Game_button(
+            set_game_over,
+            self.btn_dict["bet_btn16"],
+            self.btn_dict["bet_btn17"],
+            int(btn_pos_x + (off_set * 1.5)),
+            btn_pos_y + (off_set // 2),
+            self.btn_dict["bet_btn15"],
+            True,
+        )
+        self.game_btns.append(self.leave_btn)
+
+        # def player_split_cards() -> None:
+        #     """add text here."""
+        #     pass
+
+        # self.split_btn = Game_button(
+        #     player_split_cards,
+        #     self.btn_dict["bet_btn10"],
+        #     self.btn_dict["bet_btn11"],
+        #     btn_pos_x + (off_set * 1),
+        #     btn_pos_y + (off_set // 2),
+        #     self.btn_dict["bet_btn9"],
+        # )
+        # self.game_btns.append(self.split_btn)
 
         self.bet_btn = Game_button(
             player_place_bet,
@@ -193,6 +223,14 @@ class PlayerInSeat:
             text=str(self.main_player.get_balance()),
             size=34,
             coords=self.text.player_coords(self.main_player.get_player_pos()),
+            colour=config.WHITE,
+        )
+        x, y = self.text.player_coords(self.main_player.get_player_pos())
+        self.text.drawText(
+            surf=self.screen,
+            text=self.main_player.get_name(),
+            size=34,
+            coords=(x, y - 50),
             colour=config.WHITE,
         )
 

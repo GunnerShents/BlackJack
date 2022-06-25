@@ -20,10 +20,10 @@ class Seat:
 
         # dict holds coords for the centre of the seat position, in the key as a tuple.
         self.position = position
-        self.seat_coords: dict[int, tuple[int, int]] = {
-            3: (config.WIDTH // 20 * 2, config.HEIGHT // 10 * 4),
-            2: (config.WIDTH // 20 * 8, config.HEIGHT // 10 * 6),
-            1: (config.WIDTH // 20 * 14, config.HEIGHT // 10 * 4),
+        self.seat_coords: dict[int, tuple[int | float, int | float]] = {
+            3: (config.WIDTH // 20 * 2, config.HEIGHT // 10 * 3.5),
+            2: (config.WIDTH // 20 * 8.2, config.HEIGHT // 20 * 11),
+            1: (config.WIDTH // 20 * 14, config.HEIGHT // 10 * 3.5),
         }
         self.seat_img = [
             pygame.image.load(path.join(config.IMG_DIR, "seat1.png")).convert_alpha(),

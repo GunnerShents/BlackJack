@@ -4,15 +4,11 @@ Jobs to do:
 
 Working on:
 
-    . Correct chip grouping when the double button is pressed.
-    . Need a way to leave the table.
+    . Create a file system to store player name and balance.
     . Stop players with zero balance from playing.
-    . Check double down method - not working at mo.
     . Check that the result method in playerInSeat class calculates if the player has blackjack 
       and the deal has 21 with more than 2 cards. The player should win the hand.
       Continue to allow the players to play in turn. 
-    . Character class has a hand list and so do the children classes,
-      check to see if parent class is enough.
     
 
 Extended project:

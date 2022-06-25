@@ -149,10 +149,12 @@ class MainGame:
     # ------------------------------------------------------
     # Game methods
 
-    def update_graphics_events(self) -> None:
+    def updates_graohics_and_runs_functionality(self) -> None:
         """
         Draws the table, card_deck, seat images, reset button and checks the colide
-        function on the seat image.
+        function on the seat image. If a player presses the leave button they
+        are removed from the table.
+
         Run function in the main game body
         """
         self.screen.blit(self.table, (0, 0))
@@ -168,6 +170,11 @@ class MainGame:
             for seat in self.seat_list:
                 seat.draw_seats(self.screen)
                 seat.check_collide_img_change(*pygame.mouse.get_pos())
+        for game in self.games_in_play:
+            if game.game_over == True:
+                self.games_in_play.remove(game)
+                seat = Seat(game.main_player.get_player_pos(), self.check_click)
+                self.seat_list.append(seat)
 
     def check_click(self) -> None:
         """
@@ -176,7 +183,7 @@ class MainGame:
         """
         for seat in self.seat_list:
             if seat.check_collide_click(*pygame.mouse.get_pos()):
-                self.create_game(seat.x, seat.y, seat.get_position())
+                self.create_game(int(seat.x), int(seat.y), seat.get_position())
                 self.seat_list.remove(seat)
         # actions click function if reset button clicked and active
         if self.reset_btn.check_collide(*pygame.mouse.get_pos()):
@@ -184,6 +191,7 @@ class MainGame:
 
     # creates the player object
     def create_game(self, x: int, y: int, pos: int) -> None:
+        """A game is defined as the plater versus the dealer."""
         player = "Phil"
         balance = 150
         player = Player(player, int(balance), x, y, pos)
@@ -259,6 +267,7 @@ class MainGame:
             game.set_turn_over(False)
             game.set_all_btns(game.chip_btns, True)
             game.player_bet.reset()
+            game.leave_btn.set_active(True)
         self.reset_btn.set_active(False)
         self.betting = True
 
@@ -297,7 +306,7 @@ def main() -> None:
                 main_game.reset_btn.reset_image()
 
         screen.fill(config.BLACK)
-        main_game.update_graphics_events()
+        main_game.updates_graohics_and_runs_functionality()
         for game in main_game.games_in_play:
             game.draw_all_graphics()
         main_game.runs_game_play()
