@@ -1,3 +1,4 @@
+from data import DataEntry
 import random
 import sys
 from os import path
@@ -44,6 +45,7 @@ class MainGame:
         self.deck_img = Deck_holder()
         # ---------------------------------
         # Sets up the game
+        self.player_data = DataEntry("playerData")
         self.timer = Timer(config.FPS)
         self.draw_card_images = CardImages()
         self.card_plays = CardPlays()
@@ -107,6 +109,8 @@ class MainGame:
                 game.double_btn.set_active(True)
                 game.stand_btn.set_active(True)
                 game.card_plays_btn.set_active(True)
+                if game.main_player.can_split():
+                    game.split_btn.set_active(True)
                 first_player = False
             else:
                 game.set_all_btns(game.get_game_btns(), False)
@@ -149,7 +153,7 @@ class MainGame:
     # ------------------------------------------------------
     # Game methods
 
-    def updates_graohics_and_runs_functionality(self) -> None:
+    def updates_graphics_and_runs_functionality(self) -> None:
         """
         Draws the table, card_deck, seat images, reset button and checks the colide
         function on the seat image. If a player presses the leave button they
@@ -175,6 +179,9 @@ class MainGame:
                 self.games_in_play.remove(game)
                 seat = Seat(game.main_player.get_player_pos(), self.check_click)
                 self.seat_list.append(seat)
+                self.player_data.update_dict(
+                    game.main_player.get_name(), game.main_player.get_balance()
+                )
 
     def check_click(self) -> None:
         """
@@ -192,9 +199,8 @@ class MainGame:
     # creates the player object
     def create_game(self, x: int, y: int, pos: int) -> None:
         """A game is defined as the plater versus the dealer."""
-        player = "Phil"
-        balance = 150
-        player = Player(player, int(balance), x, y, pos)
+        p_name, p_bal = self.player_data.create_random()
+        player = Player(p_name, int(p_bal), x, y, pos)
         game = PlayerInSeat(
             screen=self.screen, main_player=player, main_deck=self.main_deck, the_dealer=self.dealer
         )
@@ -238,8 +244,8 @@ class MainGame:
         """
         This method handles all the game logic for the table.
         Handles the bets placed, launches the clock, deals to the
-        players.
-        """
+        players. Checks next player and sets the buttons depending hand
+        condition."""
         if self.betting:
             self.start_the_clock()
             self.deal_to_table()
@@ -250,6 +256,8 @@ class MainGame:
                     self.games_in_play[self.game_index_position].double_btn.set_active(True)
                     self.games_in_play[self.game_index_position].stand_btn.set_active(True)
                     self.games_in_play[self.game_index_position].card_plays_btn.set_active(True)
+                    if self.games_in_play[self.game_index_position].main_player.can_split():
+                        self.games_in_play[self.game_index_position].split_btn.set_active(True)
                 else:
                     self.dealer_and_results()
                     self.players_turn = False
@@ -271,6 +279,13 @@ class MainGame:
         self.reset_btn.set_active(False)
         self.betting = True
 
+    def update_and_close_table(self):
+        """Updates the database and file with the players current balances."""
+        for g in self.games_in_play:
+            n, b = g.main_player.get_name(), g.main_player.get_balance()
+            self.player_data.update_dict(n, b)
+        self.player_data.update_file()
+
 
 def main() -> None:
     pygame.init()
@@ -291,6 +306,7 @@ def main() -> None:
         for event in pygame.event.get():
             # Check for closing window
             if event.type == pygame.QUIT:
+                main_game.update_and_close_table()
                 running = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if pygame.mouse.get_pressed() == (1, 0, 0):
@@ -306,7 +322,7 @@ def main() -> None:
                 main_game.reset_btn.reset_image()
 
         screen.fill(config.BLACK)
-        main_game.updates_graohics_and_runs_functionality()
+        main_game.updates_graphics_and_runs_functionality()
         for game in main_game.games_in_play:
             game.draw_all_graphics()
         main_game.runs_game_play()

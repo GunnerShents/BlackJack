@@ -120,26 +120,26 @@ class PlayerInSeat:
             set_game_over,
             self.btn_dict["bet_btn16"],
             self.btn_dict["bet_btn17"],
-            int(btn_pos_x + (off_set * 1.5)),
+            int(btn_pos_x + (off_set * 2)),
             btn_pos_y + (off_set // 2),
             self.btn_dict["bet_btn15"],
             True,
         )
         self.game_btns.append(self.leave_btn)
 
-        # def player_split_cards() -> None:
-        #     """add text here."""
-        #     pass
+        def player_split_cards() -> None:
+            """add text here."""
+            pass
 
-        # self.split_btn = Game_button(
-        #     player_split_cards,
-        #     self.btn_dict["bet_btn10"],
-        #     self.btn_dict["bet_btn11"],
-        #     btn_pos_x + (off_set * 1),
-        #     btn_pos_y + (off_set // 2),
-        #     self.btn_dict["bet_btn9"],
-        # )
-        # self.game_btns.append(self.split_btn)
+        self.split_btn = Game_button(
+            player_split_cards,
+            self.btn_dict["bet_btn10"],
+            self.btn_dict["bet_btn11"],
+            btn_pos_x + (off_set * 1),
+            btn_pos_y + (off_set // 2),
+            self.btn_dict["bet_btn9"],
+        )
+        self.game_btns.append(self.split_btn)
 
         self.bet_btn = Game_button(
             player_place_bet,
@@ -182,7 +182,8 @@ class PlayerInSeat:
         def chip_btn_action(value: int) -> None:
             """Creates a chip with the argument value"""
             self.player_bet.create_chip(value, self.btn_dict[f"chip_{value}_up"], self.main_player)
-            self.bet_btn.set_active(True)
+            if self.main_player.get_balance() > 0:
+                self.bet_btn.set_active(True)
 
         self.btn_dict = generate_images()
         btn_x, btn_y = self.main_player.create_start_coords(80)
@@ -229,8 +230,8 @@ class PlayerInSeat:
         self.text.drawText(
             surf=self.screen,
             text=self.main_player.get_name(),
-            size=34,
-            coords=(x, y - 50),
+            size=20,
+            coords=(x - 30, y - 50),
             colour=config.WHITE,
         )
 

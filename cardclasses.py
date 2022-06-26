@@ -47,6 +47,10 @@ class Card:
 
         return self.value[self.name]
 
+    def get_card_name(self) -> str:
+
+        return self.name
+
 
 class CardImages:
     """

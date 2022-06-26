@@ -38,7 +38,10 @@ class Seat:
 
     def draw_seats(self, area: pygame.surface.Surface) -> None:
 
-        area.blit(self.seat_img[self.index], (self.x, self.y))
+        if self.get_position() == 2:
+            area.blit(self.seat_img[self.index], (self.x, self.y + 20))
+        else:
+            area.blit(self.seat_img[self.index], (self.x, self.y + 50))
 
     def check_collide_img_change(self, x: int, y: int) -> None:
         if self.rect.collidepoint(x, y):

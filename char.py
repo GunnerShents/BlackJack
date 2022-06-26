@@ -76,7 +76,7 @@ class Character:
         return len(self.hand) == 2 and self.total == 21
 
     def reset(self) -> None:
-        print("I am the char reset method - parent method")
+
         self.hand = []
         self.bust = False
         self.total = 0
@@ -102,6 +102,11 @@ class Player(Character):
         self.bust = False
         self.player_x = start_x
         self.player_y = start_y
+
+    def can_split(self) -> bool:
+        """@returns bool if the player has two cards the same value in
+        their hand."""
+        return self.hand[0].get_card_name() == self.hand[1].get_card_name()
 
     def get_bet_made(self) -> bool:
         return self.bet_made
@@ -170,7 +175,7 @@ class Player(Character):
         return self.total == 21 and len(self.hand) == 2
 
     def reset_bet(self) -> None:
-        print("I am the player reset - child method")
+
         self.bet = 0
         self.bet_made = False
 
